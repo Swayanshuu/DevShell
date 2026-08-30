@@ -35,6 +35,9 @@ public class AuthService {
             System.out.println("  " + AnsiStyle.dim("Let's connect your GitHub account to start tracking your developer DNA.\n"));
 
             login(null);
+            if (isLoggedIn() && syncService != null) {
+                syncService.syncAll(false);
+            }
             return isLoggedIn();
         }
         return true;

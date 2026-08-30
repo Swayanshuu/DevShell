@@ -79,7 +79,7 @@ public class ActivityCommand implements Runnable {
         System.out.println("  " + AnsiStyle.dim("──────────────────────────────────────────────────────────────────"));
 
         for (Commit c : filteredCommits) {
-            String timeStr = c.getDate() != null ? c.getDate().format(DateTimeFormatter.ofPattern("MM-dd HH:mm")) : "14:32";
+            String timeStr = c.getDate() != null ? c.getDate().format(DateTimeFormatter.ofPattern("MM-dd HH:mm")) : "--:--";
             String repoStr = String.format("%-18s", c.getRepoName());
             String shaStr = AnsiStyle.yellow("[" + c.getShortSha() + "]");
             String msgStr = AnsiStyle.boldWhite(c.getShortMessage());

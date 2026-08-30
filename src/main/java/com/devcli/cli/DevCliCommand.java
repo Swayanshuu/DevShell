@@ -31,9 +31,16 @@ import java.util.concurrent.Callable;
                 ExportCommand.class
         },
         mixinStandardHelpOptions = true,
-        version = "DevShell 1.0.1 (Swynx)"
+        versionProvider = DevCliCommand.VersionProvider.class
 )
 public class DevCliCommand implements Callable<Integer> {
+
+    public static class VersionProvider implements CommandLine.IVersionProvider {
+        @Override
+        public String[] getVersion() {
+            return new String[]{ "DevShell " + com.devcli.service.UpdateCheckerService.getCurrentVersion() + " (Swynx)" };
+        }
+    }
 
     @Option(names = {"--debug"}, description = "Enable detailed technical debug output and trace logs", scope = CommandLine.ScopeType.INHERIT)
     private boolean debug;

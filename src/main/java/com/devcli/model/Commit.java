@@ -26,9 +26,9 @@ public class Commit {
     public String getSha() { return sha; }
     public void setSha(String sha) { this.sha = sha; }
 
-    public String getShortSha() { return sha != null && sha.length() >= 7 ? sha.substring(0, 7) : sha; }
+    public String getShortSha() { return sha != null && sha.length() >= 7 ? sha.substring(0, 7) : (sha != null ? sha : ""); }
 
-    public String getRepoName() { return repoName; }
+    public String getRepoName() { return repoName != null ? repoName : "Unknown"; }
     public void setRepoName(String repoName) { this.repoName = repoName; }
 
     public String getMessage() { return message; }

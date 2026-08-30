@@ -27,7 +27,7 @@ public class BoxRenderer {
         System.out.println(AnsiStyle.boldCyan("│   ██████╔╝███████╗ ╚████╔╝ ███████║██║  ██║███████╗███████╗ │"));
         System.out.println(AnsiStyle.boldCyan("│   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝ │"));
         System.out.println(AnsiStyle.boldCyan("│                                                             │"));
-        System.out.println(AnsiStyle.boldCyan("│") + AnsiStyle.gray("      Your Personal Developer Command Center • ") + AnsiStyle.boldCyan(swynxLink) + AnsiStyle.gray("         ") + AnsiStyle.boldCyan("│"));
+        System.out.println(AnsiStyle.boldCyan("│") + AnsiStyle.gray("   Your Personal Developer Command Center • ") + AnsiStyle.boldCyan(swynxLink) + AnsiStyle.gray(" • ") + AnsiStyle.boldYellow("v" + com.devcli.service.UpdateCheckerService.getCurrentVersion()) + AnsiStyle.gray("   ") + AnsiStyle.boldCyan("│"));
         System.out.println(AnsiStyle.boldCyan("│                                                             │"));
         System.out.println(AnsiStyle.boldCyan("╰─────────────────────────────────────────────────────────────╯"));
         System.out.println();

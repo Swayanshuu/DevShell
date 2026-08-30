@@ -12,11 +12,12 @@ public class AchievementEngine {
     public List<Achievement> evaluateAchievements(List<Repository> repos, List<Commit> commits, List<PullRequest> prs, List<Learning> learnings, List<Bug> bugs, int streak) {
         List<Achievement> list = new ArrayList<>();
 
-        int commitCount = commits != null ? commits.size() * 10 : 842;
-        int repoCount = repos != null ? repos.size() : 18;
-        int prCount = prs != null ? prs.size() : 42;
-        int learningCount = learnings != null ? learnings.size() : 2;
-        int bugCount = bugs != null ? bugs.size() : 1;
+        int repoCommitSum = repos != null ? repos.stream().mapToInt(Repository::getCommitCount).sum() : 0;
+        int commitCount = commits != null ? Math.max(commits.size(), repoCommitSum) : repoCommitSum;
+        int repoCount = repos != null ? repos.size() : 0;
+        int prCount = prs != null ? prs.size() : 0;
+        int learningCount = learnings != null ? learnings.size() : 0;
+        int bugCount = bugs != null ? bugs.size() : 0;
 
         // 1. Commit Machine
         boolean commitUnlocked = commitCount >= 50;
@@ -35,7 +36,7 @@ public class AchievementEngine {
         ));
 
         // 3. Octopus
-        long activeRepoCount = repos != null ? repos.stream().filter(r -> r.getStatus() == Repository.Status.ACTIVE).count() : 3;
+        long activeRepoCount = repos != null ? repos.stream().filter(r -> r.getStatus() == Repository.Status.ACTIVE).count() : 0;
         boolean octopusUnlocked = activeRepoCount >= 3;
         list.add(new Achievement(
                 "ach_3", "OCTOPUS", "OCTOPUS", "🐙",

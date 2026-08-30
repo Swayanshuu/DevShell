@@ -13,7 +13,7 @@
 
     <groupId>com.swynx</groupId>
     <artifactId>devshell</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.10</version>
     <name>DevShell</name>
     <description>Personal Developer Command Center CLI application by Swynx</description>
 
@@ -58,6 +58,12 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

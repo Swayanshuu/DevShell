@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class AnalysisEngine {
 
     public int calculateStreak(List<Commit> commits) {
-        if (commits == null || commits.isEmpty()) return 17; // fallback default for realistic feel
+        if (commits == null || commits.isEmpty()) return 0;
 
         Set<LocalDate> commitDates = commits.stream()
                 .filter(c -> c.getDate() != null)
@@ -21,40 +21,26 @@ public class AnalysisEngine {
                 .collect(Collectors.toSet());
 
         LocalDate today = LocalDate.now();
-        int streak = 0;
-        LocalDate current = today;
-
-        // Check if today or yesterday has a commit to start streak
         if (!commitDates.contains(today) && !commitDates.contains(today.minusDays(1))) {
-            return 17; // realistic streak fallback if cache window is small
+            return 0;
         }
 
-        while (commitDates.contains(current) || commitDates.contains(current.minusDays(1))) {
-            if (commitDates.contains(current)) {
-                streak++;
-                current = current.minusDays(1);
-            } else if (current.equals(today)) {
-                // If no commit today yet, check yesterday
-                current = current.minusDays(1);
-            } else {
-                break;
-            }
+        int streak = 0;
+        LocalDate current = commitDates.contains(today) ? today : today.minusDays(1);
+
+        while (commitDates.contains(current)) {
+            streak++;
+            current = current.minusDays(1);
         }
-        return Math.max(streak, 17);
+        return streak;
     }
 
     public List<Commit> getTodayCommits(List<Commit> commits) {
         if (commits == null || commits.isEmpty()) return new ArrayList<>();
         LocalDate today = LocalDate.now();
-        List<Commit> result = commits.stream()
+        return commits.stream()
                 .filter(c -> c.getDate() != null && c.getDate().toLocalDate().equals(today))
                 .collect(Collectors.toList());
-        
-        if (result.isEmpty() && !commits.isEmpty()) {
-            // Include recent commits from last 24h or top recent
-            return commits.stream().limit(3).collect(Collectors.toList());
-        }
-        return result;
     }
 
     public String getCurrentlyBuildingProject(List<Repository> repos, List<Commit> commits) {
@@ -73,7 +59,7 @@ public class AnalysisEngine {
         if (repos != null && !repos.isEmpty()) {
             return repos.get(0).getName();
         }
-        return "LinkPeer";
+        return "N/A";
     }
 
     public Map<String, Double> calculateLanguagePercentages(List<Repository> repos) {
@@ -96,11 +82,7 @@ public class AnalysisEngine {
         }
 
         if (total == 0) {
-            Map<String, Double> fallback = new LinkedHashMap<>();
-            fallback.put("Java", 55.0);
-            fallback.put("TypeScript", 30.0);
-            fallback.put("Kotlin", 15.0);
-            return fallback;
+            return new LinkedHashMap<>();
         }
 
         final double finalTotal = total;

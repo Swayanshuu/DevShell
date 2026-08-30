@@ -1,6 +1,6 @@
 {
   "name": "devshell",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "DevShell - Personal Developer Command Center CLI application by Swynx",
   "main": "bin/devshell.js",
   "bin": {
@@ -12,14 +12,13 @@
   },
   "files": [
     "bin",
-    "target/devshell-1.0.8.jar",
+    "target/devshell-1.0.10.jar",
     "README.md",
     "COMMANDS.md",
     "package.json"
   ],
   "scripts": {
     "build": "mvn clean package -DskipTests",
-    "prepublishOnly": "mvn package -DskipTests",
     "start": "node bin/devshell.js"
   },
   "keywords": [

@@ -43,4 +43,14 @@ public class AnalysisEngineTest {
         assertEquals(70.0, pcts.get("Java"), 0.1);
         assertEquals(30.0, pcts.get("TypeScript"), 0.1);
     }
+
+    @Test
+    public void testEmptyDataReturnsZero() {
+        AnalysisEngine engine = new AnalysisEngine();
+        int streak = engine.calculateStreak(new ArrayList<>());
+        assertEquals(0, streak, "Empty commits should result in 0 streak");
+
+        Map<String, Double> pcts = engine.calculateLanguagePercentages(new ArrayList<>());
+        assertTrue(pcts.isEmpty(), "Empty repositories should result in empty language map");
+    }
 }

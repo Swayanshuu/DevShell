@@ -64,14 +64,12 @@ public class StatusCommand implements Runnable {
         // 2. Greeting Header
         String greeting = getGreeting();
         System.out.println("  " + greeting + ", " + AnsiStyle.boldCyan("@" + user.getUsername()) + " 👋");
-        System.out.println("  " + AnsiStyle.dim("Developer Command Center • Session Active") + "\n");
+        System.out.println("  " + AnsiStyle.dim("Developer Command Center v" + com.devcli.service.UpdateCheckerService.getCurrentVersion() + " • Session Active") + "\n");
 
         // 3. Metric Badges Row
         int streak = analysisEngine.calculateStreak(commits);
         List<Commit> todayCommits = getTodayCommits(commits);
         long activeProjectsCount = repos.stream().filter(r -> r.getStatus() == Repository.Status.ACTIVE).count();
-        if (activeProjectsCount == 0 && !repos.isEmpty())
-            activeProjectsCount = Math.min(repos.size(), 3);
 
         System.out.println("  🔥 " + AnsiStyle.boldYellow(streak + " day streak") + "    " +
                 "💻 " + AnsiStyle.boldCyan(todayCommits.size() + " commits today") + "    " +

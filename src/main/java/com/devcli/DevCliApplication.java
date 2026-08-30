@@ -15,12 +15,14 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
 
     private final IFactory factory;
     private final DevCliCommand devCliCommand;
+    private final com.devcli.service.UpdateCheckerService updateCheckerService;
     private int exitCode;
 
     @Autowired
-    public DevCliApplication(IFactory factory, DevCliCommand devCliCommand) {
+    public DevCliApplication(IFactory factory, DevCliCommand devCliCommand, com.devcli.service.UpdateCheckerService updateCheckerService) {
         this.factory = factory;
         this.devCliCommand = devCliCommand;
+        this.updateCheckerService = updateCheckerService;
     }
 
     public static void main(String[] args) {
@@ -79,6 +81,7 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
         });
 
         exitCode = cmdLine.execute(args);
+        updateCheckerService.checkAndNotify();
     }
 
     @Override

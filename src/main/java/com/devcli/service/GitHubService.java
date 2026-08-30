@@ -81,7 +81,7 @@ public class GitHubService {
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() != 200) {
-            return getDemoRepositories(username);
+            return new ArrayList<>();
         }
 
         JsonNode arrayNode = objectMapper.readTree(response.body());
@@ -94,7 +94,7 @@ public class GitHubService {
             repo.setFullName(node.path("full_name").asText());
             repo.setOwner(node.path("owner").path("login").asText());
             repo.setDescription(node.path("description").asText(""));
-            repo.setLanguage(node.path("language").asText("Java"));
+            repo.setLanguage(node.path("language").asText(null));
             repo.setStars(node.path("stargazers_count").asInt());
             repo.setForks(node.path("forks_count").asInt());
             repo.setPrivate(node.path("private").asBoolean());
@@ -123,7 +123,7 @@ public class GitHubService {
     }
 
     public List<Commit> fetchCommits(String token, String username, List<Repository> repos) {
-        if (isDemoToken(token)) return getDemoCommits(username, repos);
+        if (isDemoToken(token)) return new ArrayList<>();
 
         List<Commit> allCommits = new ArrayList<>();
         // Fetch commits for up to 5 top active repositories
@@ -160,23 +160,153 @@ public class GitHubService {
             count++;
         }
 
-        if (allCommits.isEmpty()) return getDemoCommits(username, repos);
         return allCommits;
     }
 
     public List<PullRequest> fetchPullRequests(String token, String username) {
-        if (isDemoToken(token)) return getDemoPullRequests(username);
-        return getDemoPullRequests(username);
+        if (isDemoToken(token) || username == null || username.isEmpty()) return new ArrayList<>();
+
+        List<PullRequest> prs = new ArrayList<>();
+        try {
+            String url = String.format("https://api.github.com/search/issues?q=author:%s+type:pr&sort=updated&per_page=30", username);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
+                    .header("Accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "DevCLI-App")
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                JsonNode rootNode = objectMapper.readTree(response.body());
+                JsonNode items = rootNode.path("items");
+                if (items != null && items.isArray()) {
+                    for (JsonNode item : items) {
+                        PullRequest pr = new PullRequest();
+                        pr.setId(item.path("id").asInt());
+                        pr.setNumber(item.path("number").asInt());
+                        pr.setTitle(item.path("title").asText());
+                        pr.setAuthor(username);
+
+                        String repoUrl = item.path("repository_url").asText();
+                        String repoName = repoUrl.contains("/") ? repoUrl.substring(repoUrl.lastIndexOf('/') + 1) : "repo";
+                        pr.setRepoName(repoName);
+
+                        String state = item.path("state").asText("OPEN").toUpperCase();
+                        if ("CLOSED".equals(state) && item.has("pull_request") && !item.path("pull_request").path("merged_at").isNull()) {
+                            state = "MERGED";
+                        }
+                        pr.setState(state);
+
+                        pr.setCreatedAt(parseIsoDate(item.path("created_at").asText()));
+                        pr.setMergedAt(parseIsoDate(item.path("closed_at").asText()));
+                        pr.setUrl(item.path("html_url").asText());
+                        prs.add(pr);
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return prs;
     }
 
     public List<Issue> fetchIssues(String token, String username) {
-        if (isDemoToken(token)) return getDemoIssues(username);
-        return getDemoIssues(username);
+        if (isDemoToken(token) || username == null || username.isEmpty()) return new ArrayList<>();
+
+        List<Issue> issues = new ArrayList<>();
+        try {
+            String url = String.format("https://api.github.com/search/issues?q=author:%s+type:issue&sort=updated&per_page=30", username);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
+                    .header("Accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "DevCLI-App")
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                JsonNode rootNode = objectMapper.readTree(response.body());
+                JsonNode items = rootNode.path("items");
+                if (items != null && items.isArray()) {
+                    for (JsonNode item : items) {
+                        Issue issue = new Issue();
+                        issue.setId(item.path("id").asInt());
+                        issue.setNumber(item.path("number").asInt());
+                        issue.setTitle(item.path("title").asText());
+                        issue.setAuthor(username);
+
+                        String repoUrl = item.path("repository_url").asText();
+                        String repoName = repoUrl.contains("/") ? repoUrl.substring(repoUrl.lastIndexOf('/') + 1) : "repo";
+                        issue.setRepoName(repoName);
+
+                        issue.setState(item.path("state").asText("OPEN").toUpperCase());
+                        issue.setCreatedAt(parseIsoDate(item.path("created_at").asText()));
+                        issue.setClosedAt(parseIsoDate(item.path("closed_at").asText()));
+                        issue.setUrl(item.path("html_url").asText());
+                        issues.add(issue);
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return issues;
     }
 
     public List<ActivityEvent> fetchActivityEvents(String token, String username) {
-        if (isDemoToken(token)) return getDemoEvents(username);
-        return getDemoEvents(username);
+        if (isDemoToken(token) || username == null || username.isEmpty()) return new ArrayList<>();
+
+        List<ActivityEvent> events = new ArrayList<>();
+        try {
+            String url = String.format("https://api.github.com/users/%s/events?per_page=30", username);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
+                    .header("Accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "DevCLI-App")
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                JsonNode arrayNode = objectMapper.readTree(response.body());
+                if (arrayNode != null && arrayNode.isArray()) {
+                    for (JsonNode node : arrayNode) {
+                        String id = node.path("id").asText();
+                        String type = node.path("type").asText();
+                        String repoName = node.path("repo").path("name").asText();
+                        if (repoName.contains("/")) {
+                            repoName = repoName.substring(repoName.indexOf('/') + 1);
+                        }
+                        LocalDateTime createdAt = parseIsoDate(node.path("created_at").asText());
+                        JsonNode payload = node.path("payload");
+
+                        String detail = type;
+                        if ("PushEvent".equalsIgnoreCase(type)) {
+                            int count = payload.path("commits").size();
+                            String branch = payload.path("ref").asText("").replace("refs/heads/", "");
+                            detail = "Pushed " + count + " commit" + (count != 1 ? "s" : "") + (branch.isEmpty() ? "" : " to " + branch);
+                        } else if ("CreateEvent".equalsIgnoreCase(type)) {
+                            String refType = payload.path("ref_type").asText("item");
+                            String ref = payload.path("ref").asText("");
+                            detail = "Created " + refType + (ref.isEmpty() ? "" : " " + ref);
+                        } else if ("PullRequestEvent".equalsIgnoreCase(type)) {
+                            String action = payload.path("action").asText("updated");
+                            int num = payload.path("number").asInt();
+                            detail = action.substring(0, 1).toUpperCase() + action.substring(1) + " PR #" + num;
+                        } else if ("IssuesEvent".equalsIgnoreCase(type)) {
+                            String action = payload.path("action").asText("updated");
+                            int num = payload.path("issue").path("number").asInt();
+                            detail = action.substring(0, 1).toUpperCase() + action.substring(1) + " issue #" + num;
+                        } else if ("WatchEvent".equalsIgnoreCase(type)) {
+                            detail = "Starred repository";
+                        }
+
+                        events.add(new ActivityEvent(id, type, repoName, detail, createdAt));
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+        return events;
     }
 
     private boolean isDemoToken(String token) {

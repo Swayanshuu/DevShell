@@ -74,7 +74,7 @@ public class StatsCommand implements Runnable {
         // 3. Contribution Metrics
         BoxRenderer.printSectionHeader("📊 CONTRIBUTION METRICS");
         int totalCommits = repos.stream().mapToInt(Repository::getCommitCount).sum();
-        if (totalCommits == 0) totalCommits = commits.size() * 14;
+        if (totalCommits == 0) totalCommits = commits.size();
 
         List<String> headers = List.of("Metric", "Value", "Interpretation");
         List<List<String>> rows = new ArrayList<>();

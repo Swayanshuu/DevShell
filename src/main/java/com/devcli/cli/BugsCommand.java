@@ -44,7 +44,7 @@ public class BugsCommand implements Runnable {
         }
 
         if (addTitle != null && !addTitle.trim().isEmpty()) {
-            journalService.addBug(addTitle.trim(), project != null ? project : "LinkPeer", "HIGH", "Tracked via DevCLI");
+            journalService.addBug(addTitle.trim(), project != null ? project : "General", "HIGH", "Tracked via DevCLI");
             System.out.println(AnsiStyle.boldGreen("\n✓ Logged bug: ") + AnsiStyle.brightWhite(addTitle.trim()));
             System.out.println();
             return;

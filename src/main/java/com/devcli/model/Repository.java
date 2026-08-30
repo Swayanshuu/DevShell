@@ -71,7 +71,7 @@ public class Repository {
     public LocalDateTime getLastCommitAt() { return lastCommitAt; }
     public void setLastCommitAt(LocalDateTime lastCommitAt) { this.lastCommitAt = lastCommitAt; }
 
-    public Status getStatus() { return status; }
+    public Status getStatus() { return status != null ? status : Status.INACTIVE; }
     public void setStatus(Status status) { this.status = status; }
 
     public int getCommitCount() { return commitCount; }

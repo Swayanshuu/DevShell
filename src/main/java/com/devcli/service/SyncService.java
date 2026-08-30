@@ -71,7 +71,7 @@ public class SyncService {
             if (!quiet) {
                 System.out.println();
                 int totalCommits = repos.stream().mapToInt(Repository::getCommitCount).sum();
-                if (totalCommits == 0) totalCommits = commits.size() * 14;
+                if (totalCommits == 0) totalCommits = commits.size();
 
                 long languageCount = repos.stream().map(Repository::getLanguage).distinct().count();
 
