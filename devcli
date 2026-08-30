@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+JAR_FILE="$DIR/target/devcli-1.0.0.jar"
+if [ ! -f "$JAR_FILE" ]; then
+    echo "Building DevCLI executable package..."
+    mvn clean package -DskipTests -q
+fi
+java -jar "$JAR_FILE" "$@"

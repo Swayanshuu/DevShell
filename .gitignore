@@ -1,0 +1,20 @@
+# Maven build output
+target/
+
+# Local session credentials & storage
+.devshell/
+.devcli/
+
+# Generated export reports
+*.pdf
+test-report.pdf
+
+# IDE and System files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db

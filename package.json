@@ -1,0 +1,36 @@
+{
+  "name": "devshell",
+  "version": "1.0.8",
+  "description": "DevShell - Personal Developer Command Center CLI application by Swynx",
+  "main": "bin/devshell.js",
+  "bin": {
+    "devshell": "bin/devshell.js",
+    "devcli": "bin/devshell.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin",
+    "target/devshell-1.0.8.jar",
+    "README.md",
+    "COMMANDS.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "mvn clean package -DskipTests",
+    "prepublishOnly": "mvn package -DskipTests",
+    "start": "node bin/devshell.js"
+  },
+  "keywords": [
+    "devcli",
+    "swynx",
+    "github",
+    "cli",
+    "developer",
+    "dashboard",
+    "analytics"
+  ],
+  "author": "Swynx",
+  "license": "MIT"
+}
