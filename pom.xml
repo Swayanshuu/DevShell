@@ -13,7 +13,7 @@
 
     <groupId>com.swynx</groupId>
     <artifactId>devshell</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <name>DevShell</name>
     <description>Personal Developer Command Center CLI application by Swynx</description>
 

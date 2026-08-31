@@ -25,7 +25,9 @@ public class SyncService {
     public void syncAll(boolean quiet) {
         UserProfile user = storageService.getUserProfile();
         if (user == null) {
-            System.out.println(AnsiStyle.brightRed("✗ Not logged in. Run `devcli login` to authorize."));
+            if (!quiet) {
+                System.out.println(AnsiStyle.brightRed("✗ Not logged in. Run `devcli login` to authorize."));
+            }
             return;
         }
 
@@ -83,7 +85,24 @@ public class SyncService {
                 System.out.println(AnsiStyle.bold("I know a little about you now. 👀\n"));
             }
         } catch (Exception e) {
-            System.out.println(AnsiStyle.brightRed("✗ Sync encountered an issue: " + e.getMessage()));
+            if (!quiet) {
+                System.out.println(AnsiStyle.brightRed("✗ Sync encountered an issue: " + e.getMessage()));
+            }
         }
+    }
+
+    public java.util.concurrent.CompletableFuture<Void> triggerAutoSync() {
+        UserProfile user = storageService.getUserProfile();
+        if (user == null || user.getToken() == null || user.getToken().trim().isEmpty()) {
+            return java.util.concurrent.CompletableFuture.completedFuture(null);
+        }
+
+        List<Repository> cachedRepos = storageService.getRepositories();
+        if (cachedRepos.isEmpty()) {
+            syncAll(true);
+            return java.util.concurrent.CompletableFuture.completedFuture(null);
+        }
+
+        return java.util.concurrent.CompletableFuture.runAsync(() -> syncAll(true));
     }
 }

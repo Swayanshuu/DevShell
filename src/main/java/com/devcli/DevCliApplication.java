@@ -16,13 +16,18 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
     private final IFactory factory;
     private final DevCliCommand devCliCommand;
     private final com.devcli.service.UpdateCheckerService updateCheckerService;
+    private final com.devcli.service.SyncService syncService;
     private int exitCode;
 
     @Autowired
-    public DevCliApplication(IFactory factory, DevCliCommand devCliCommand, com.devcli.service.UpdateCheckerService updateCheckerService) {
+    public DevCliApplication(IFactory factory,
+                             DevCliCommand devCliCommand,
+                             com.devcli.service.UpdateCheckerService updateCheckerService,
+                             com.devcli.service.SyncService syncService) {
         this.factory = factory;
         this.devCliCommand = devCliCommand;
         this.updateCheckerService = updateCheckerService;
+        this.syncService = syncService;
     }
 
     public static void main(String[] args) {
@@ -60,6 +65,20 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
             return;
         }
 
+        boolean shouldAutoSync = true;
+        if (args.length > 0) {
+            String firstArg = args[0].toLowerCase();
+            if ("login".equals(firstArg) || "logout".equals(firstArg) || "help".equals(firstArg) || "sync".equals(firstArg)
+                    || "-h".equals(firstArg) || "--help".equals(firstArg) || "-v".equals(firstArg) || "--version".equals(firstArg)) {
+                shouldAutoSync = false;
+            }
+        }
+
+        java.util.concurrent.CompletableFuture<Void> syncFuture = null;
+        if (shouldAutoSync) {
+            syncFuture = syncService.triggerAutoSync();
+        }
+
         CommandLine cmdLine = new CommandLine(devCliCommand, factory);
 
         // Custom exception handler to provide clean error UX unless --debug is specified
@@ -81,6 +100,13 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
         });
 
         exitCode = cmdLine.execute(args);
+
+        if (syncFuture != null) {
+            try {
+                syncFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+            } catch (Exception ignored) {}
+        }
+
         updateCheckerService.checkAndNotify();
     }
 
