@@ -28,7 +28,8 @@ import java.util.concurrent.Callable;
                 TimelineCommand.class,
                 SyncCommand.class,
                 HelpCommand.class,
-                ExportCommand.class
+                ExportCommand.class,
+                WelcomeCommand.class
         },
         mixinStandardHelpOptions = true,
         versionProvider = DevCliCommand.VersionProvider.class
@@ -45,11 +46,11 @@ public class DevCliCommand implements Callable<Integer> {
     @Option(names = {"--debug"}, description = "Enable detailed technical debug output and trace logs", scope = CommandLine.ScopeType.INHERIT)
     private boolean debug;
 
-    private final StatusCommand statusCommand;
+    private final WelcomeCommand welcomeCommand;
 
     @Autowired
-    public DevCliCommand(StatusCommand statusCommand) {
-        this.statusCommand = statusCommand;
+    public DevCliCommand(WelcomeCommand welcomeCommand) {
+        this.welcomeCommand = welcomeCommand;
     }
 
     public boolean isDebug() {
@@ -58,8 +59,8 @@ public class DevCliCommand implements Callable<Integer> {
 
     @Override
     public Integer call() throws Exception {
-        // Default action when no subcommand is specified: run status command
-        statusCommand.run();
+        // Default action when no subcommand is specified: run interactive welcome command
+        welcomeCommand.run();
         return 0;
     }
 }

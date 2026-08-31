@@ -11,7 +11,7 @@ if (process.platform === "win32") {
   } catch (e) {}
 }
 
-const jarPath = path.join(__dirname, "..", "target", "devshell-1.0.11.jar");
+const jarPath = path.join(__dirname, "..", "target", "devshell-1.0.12.jar");
 const projectDir = path.join(__dirname, "..");
 
 // Check if Java runtime is available

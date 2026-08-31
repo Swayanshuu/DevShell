@@ -98,7 +98,7 @@ public class AuthService {
 
             System.out.println("\n  " + AnsiStyle.boldGreen("✓ Welcome aboard, @" + profile.getUsername() + "! 🎉"));
             System.out.println("  " + AnsiStyle.dim("Credentials saved locally at ~/.devshell/profile.json"));
-            System.out.println("  " + AnsiStyle.dim("Type `devshell status` to view your dashboard.\n"));
+            System.out.println("  " + AnsiStyle.dim("Type `devshell` to view your interactive dashboard.\n"));
         } catch (Exception e) {
             System.out.println(AnsiStyle.brightRed("\n✗ Authentication failed: " + e.getMessage()));
             System.out.println(AnsiStyle.yellow("Please double check your token and run `devshell login` to try again.\n"));

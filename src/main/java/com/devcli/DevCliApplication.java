@@ -62,6 +62,7 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
         if (args.length > 0 && ("-h".equals(args[0]) || "--help".equals(args[0]) || "help".equals(args[0]))) {
             com.devcli.cli.HelpCommand.printHelpScreen();
             exitCode = 0;
+            updateCheckerService.checkAndNotify();
             return;
         }
 

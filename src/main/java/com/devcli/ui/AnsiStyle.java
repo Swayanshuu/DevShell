@@ -46,6 +46,7 @@ public class AnsiStyle {
 
     public static String bold(String text) { return apply(BOLD, text); }
     public static String dim(String text) { return apply(DIM, text); }
+    public static String italic(String text) { return apply(ITALIC, text); }
     public static String gray(String text) { return apply(GRAY, text); }
     public static String green(String text) { return apply(GREEN, text); }
     public static String brightGreen(String text) { return apply(BRIGHT_GREEN, text); }
