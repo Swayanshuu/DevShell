@@ -85,7 +85,7 @@ public class WelcomeCommand implements Runnable {
         cardLines.add("  • " + AnsiStyle.boldYellow("devshell activity") + "    " + AnsiStyle.gray("Stream recent GitHub commits & events"));
         cardLines.add("  • " + AnsiStyle.boldYellow("devshell stats") + "       " + AnsiStyle.gray("Inspect Developer DNA & tech stack"));
         cardLines.add("  • " + AnsiStyle.boldYellow("devshell projects") + "    " + AnsiStyle.gray("Browse repository universe & metrics"));
-        cardLines.add("  • " + AnsiStyle.boldYellow("devshell learn") + "       " + AnsiStyle.gray("Log developer learnings & insights"));
+        cardLines.add("  • " + AnsiStyle.boldYellow("devshell learn") + "       " + AnsiStyle.gray("Save personal coding notes & TIL discoveries"));
         cardLines.add("  • " + AnsiStyle.boldYellow("devshell help") + "        " + AnsiStyle.gray("View full interactive command guide"));
 
         BoxRenderer.renderBox("🚀 DevShell Dashboard", cardLines, AnsiStyle.CYAN);

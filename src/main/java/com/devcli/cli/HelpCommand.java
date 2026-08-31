@@ -49,7 +49,7 @@ public class HelpCommand implements Runnable {
         // 4. Journal & Report Export
         System.out.println("  " + AnsiStyle.boldMagenta("📝 JOURNAL & REPORT EXPORT"));
         System.out.println("  " + AnsiStyle.dim("──────────────────────────────────────────────────────────────────"));
-        printCmd("learn", "Log or view developer discoveries (`devshell learn \"<title>\"`)");
+        printCmd("learn", "Save coding notes with category (`devshell learn \"<note>\" \"<category>\"`)");
         printCmd("bugs", "Track, log, and resolve local bugs (`--add`, `--resolve`)");
         printCmd("export", "Export Developer DNA report (`--format markdown|json|html`)");
         System.out.println();
@@ -68,7 +68,7 @@ public class HelpCommand implements Runnable {
         System.out.println("    " + AnsiStyle.cyan("devshell status") + "                    # View daily developer snapshot");
         System.out.println("    " + AnsiStyle.cyan("devshell stats") + "                     # View Developer DNA report");
         System.out.println("    " + AnsiStyle.cyan("devshell project LinkPeer") + "          # Inspect specific repository");
-        System.out.println("    " + AnsiStyle.cyan("devshell learn \"Reactive RxJava\"") + "   # Record a discovery");
+        System.out.println("    " + AnsiStyle.cyan("devshell learn \"Redis Pub/Sub\" Database") + " # Save note with category");
         System.out.println("    " + AnsiStyle.cyan("devshell export --format markdown") + "  # Export developer report\n");
     }
 
