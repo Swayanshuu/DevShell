@@ -153,39 +153,39 @@ graph TB
 
 ---
 
-### 🛠️ Tech Stack Breakdown & Technology Roles
+### Technical Stack & Component Architecture
 
-DevShell combines a carefully selected stack of modern tools to deliver a fast, local-first CLI experience:
+DevShell combines a carefully selected stack of modern technologies to deliver a high-performance, local-first CLI experience:
 
-* **☕ Java 21 LTS (Core Language & Runtime)**
+* **Java 21 LTS (Core Language & Runtime)**
   * **Role:** Core programming language powering domain models, data transformation, pattern matching, stream analytics, and multithreading.
   * **Why:** Provides high-performance execution, strict type safety, and rich concurrency utilities for processing commit telemetry.
 
-* **🍃 Spring Boot 3.3.2 (Application Container & DI)**
+* **Spring Boot 3.3.2 (Application Container & DI)**
   * **Role:** Manages application bootstrapping, Dependency Injection (`@Autowired`, `@Service`, `@Component`), and bean lifecycle management via `CommandLineRunner`.
   * **Why:** Decouples core services, simplifies component wiring, and standardizes application startup and exit hooks.
 
-* **💻 Picocli 4.7.6 (CLI Command Routing & Flag Parser)**
+* **Picocli 4.7.6 (CLI Command Routing & Flag Parser)**
   * **Role:** Parses CLI subcommands (`status`, `stats`, `projects`, `bugs`, `activity`, `timeline`, `learn`, `export`), validates option flags (`--debug`, `--format`, `--add`), generates help screens, and provides custom exception handling.
   * **Why:** Industry-standard declarative CLI engine with full Spring Boot integration and ANSI color support.
 
-* **⚡ Node.js ES6 (Cross-Platform Global Binary Wrapper)**
+* **Node.js ES6 (Cross-Platform Global Binary Wrapper)**
   * **Role:** Acts as the npm entry wrapper ([`bin/devshell.js`](file:///c:/Shibu/Everything/Dev/devcli/bin/devshell.js)). Checks for Java 17+ runtime, forces Windows Console UTF-8 (Code Page 65001), auto-packages Maven JARs if missing, and manages npm update checks.
   * **Why:** Enables instant global distribution via `npm install -g devshell` or zero-install `npx devshell` execution across Windows, macOS, and Linux.
 
-* **🔄 Java Concurrency (`CompletableFuture`) (Background Auto-Sync Engine)**
+* **Java Concurrency (`CompletableFuture`) (Background Auto-Sync Engine)**
   * **Role:** Executes non-blocking background threads in [`SyncService.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/service/SyncService.java) to pull updated GitHub repositories, commits, PRs, and issues while command output renders instantly.
   * **Why:** Eliminates network wait times for terminal commands while keeping telemetry current.
 
-* **📄 Jackson 2.17 JSON (Local-First Persistence Engine)**
+* **Jackson 2.17 JSON (Local-First Persistence Engine)**
   * **Role:** Handles JSON serialization and deserialization in [`LocalStorageService.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/storage/LocalStorageService.java), writing cached profile and telemetry data directly to `~/.devshell/*.json`.
   * **Why:** Ensures strict privacy, zero external tracking, fast file IO, and offline functionality without needing heavy database drivers.
 
-* **🎨 Custom ANSI & Unicode Box Renderer (Terminal UI Engine)**
+* **Custom ANSI & Unicode Box Renderer (Terminal UI Engine)**
   * **Role:** Formats 256-color ANSI highlights ([`AnsiStyle.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/ui/AnsiStyle.java)), box borders ([`BoxRenderer.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/ui/BoxRenderer.java)), data tables ([`TableRenderer.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/ui/TableRenderer.java)), progress bars ([`ProgressRenderer.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/ui/ProgressRenderer.java)), and loading spinners ([`LoadingSpinner.java`](file:///c:/Shibu/Everything/Dev/devcli/src/main/java/com/devcli/ui/LoadingSpinner.java)).
   * **Why:** Transforms raw command line text into modern, rich, dashboard-quality visual components in any terminal emulator.
 
-* **📦 Apache Maven 3.9+ (Build System & Packaging)**
+* **Apache Maven 3.9+ (Build System & Packaging)**
   * **Role:** Compiles 40+ Java source files, runs automated unit tests, manages dependencies in `pom.xml`, and packages the standalone executable fat JAR (`target/devshell-1.0.11.jar`).
   * **Why:** Standardized, reliable build automation for Spring Boot applications.
 
