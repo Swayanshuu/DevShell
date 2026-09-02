@@ -1,32 +1,30 @@
-# DevShell — Developer Command Center & Terminal Analytics
+<p align="center">
+  <img src="assets/DevShell-LOGO.png" alt="DevShell Logo" width="120" />
+</p>
 
-> **A high-performance, terminal-based developer analytics engine and command center built with Java 21 and Spring Boot.**
+<h1 align="center">DevShell — Developer Command Center &amp; Terminal Analytics</h1>
 
-[![npm version](https://img.shields.io/npm/v/devshell.svg?style=flat-square)](https://www.npmjs.com/package/devshell)
-[![Java 21](https://img.shields.io/badge/Java-21-blue.svg?style=flat-square)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.2-green.svg?style=flat-square)](https://spring.io/projects/spring-boot)
-[![License: MIT](https://img.shields.io/badge/License-MIT-gray.svg?style=flat-square)](LICENSE)
+<p align="center">
+  <strong>A high-performance, terminal-based developer analytics engine and command center built with Java 21 and Spring Boot.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/devshell"><img src="https://img.shields.io/npm/v/devshell.svg?style=flat-square&color=B7FF4A" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/devshell"><img src="https://img.shields.io/npm/dm/devshell.svg?style=flat-square&color=27c93f" alt="npm downloads" /></a>
+  <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-blue.svg?style=flat-square" alt="Java 21" /></a>
+  <a href="https://spring.io/projects/spring-boot"><img src="https://img.shields.io/badge/Spring%20Boot-3.3.2-green.svg?style=flat-square" alt="Spring Boot" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-gray.svg?style=flat-square" alt="License" /></a>
+</p>
+
+---
+
+<p align="center">
+  <img src="assets/DevShell-BANNER.png" alt="DevShell Terminal Command Center & Analytics Banner" width="100%" />
+</p>
 
 ---
 
-```text
-╭──────────────────────────────────────────────────────────╮
-│                                                          │
-│   ██████╗ ███████╗██╗   ██╗███████╗██╗  ██╗███████╗██╗   │
-│   ██╔══██╗██╔════╝██║   ██║██╔════╝██║  ██║██╔════╝██║   │
-│   ██║  ██║█████╗  ██║   ██║███████╗███████║█████╗  ██║   │
-│   ██║  ██║██╔══╝  ╚██╗ ██╔╝╚════██║██╔══██║██╔══╝  ██║   │
-│   ██████╔╝███████╗ ╚████╔╝ ███████║██║  ██║███████╗█████╗│
-│   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝╚════╝│
-│                                                          │
-│     Your Personal Developer Command Center • Swynx       │
-│                                                          │
-╰──────────────────────────────────────────────────────────╯
-```
 
-**DevShell** is a local-first command-line application that aggregates your GitHub development activity, evaluates contribution metrics, tracks daily commit velocity, analyzes tech stack composition, and logs architectural discoveries directly within your terminal.
-
----
 
 ## Quick Start
 
