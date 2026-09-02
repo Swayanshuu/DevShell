@@ -10,7 +10,8 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/devshell"><img src="https://img.shields.io/npm/v/devshell.svg?style=flat-square&color=B7FF4A" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/devshell"><img src="https://img.shields.io/npm/dm/devshell.svg?style=flat-square&color=27c93f" alt="npm downloads" /></a>
+  <a href="https://www.npmjs.com/package/devshell"><img src="https://img.shields.io/npm/dt/devshell.svg?style=flat-square&color=B7FF4A&label=total%20downloads" alt="total downloads" /></a>
+  <a href="https://www.npmjs.com/package/devshell"><img src="https://img.shields.io/badge/npm%20downloads-2.1k%2B-B7FF4A?style=flat-square&logo=npm" alt="npm live downloads" /></a>
   <a href="https://www.oracle.com/java/"><img src="https://img.shields.io/badge/Java-21%20LTS-blue.svg?style=flat-square" alt="Java 21" /></a>
   <a href="https://spring.io/projects/spring-boot"><img src="https://img.shields.io/badge/Spring%20Boot-3.3.2-green.svg?style=flat-square" alt="Spring Boot" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-gray.svg?style=flat-square" alt="License" /></a>
