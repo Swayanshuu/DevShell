@@ -19,11 +19,13 @@ public class WelcomeCommand implements Runnable {
 
     private final LocalStorageService storageService;
     private final AuthService authService;
+    private final com.devcli.service.SyncService syncService;
 
     @Autowired
-    public WelcomeCommand(LocalStorageService storageService, AuthService authService) {
+    public WelcomeCommand(LocalStorageService storageService, AuthService authService, com.devcli.service.SyncService syncService) {
         this.storageService = storageService;
         this.authService = authService;
+        this.syncService = syncService;
     }
 
     @Override
@@ -47,6 +49,8 @@ public class WelcomeCommand implements Runnable {
             System.out.println();
             return;
         }
+
+        syncService.syncAll(true);
 
         UserProfile profile = storageService.getUserProfile();
         String username = (profile != null && profile.getUsername() != null && !profile.getUsername().isEmpty())

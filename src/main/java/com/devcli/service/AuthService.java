@@ -29,6 +29,10 @@ public class AuthService {
     }
 
     public boolean ensureAuthenticated(SyncService syncService) {
+        return ensureAuthenticated(syncService, true);
+    }
+
+    public boolean ensureAuthenticated(SyncService syncService, boolean autoSync) {
         if (!isLoggedIn()) {
             BoxRenderer.printAsciiBanner();
             System.out.println("  " + AnsiStyle.boldWhite("Welcome to DevShell 👋"));
@@ -40,6 +44,11 @@ public class AuthService {
             }
             return isLoggedIn();
         }
+
+        if (autoSync && syncService != null) {
+            syncService.syncAll(true);
+        }
+
         return true;
     }
 

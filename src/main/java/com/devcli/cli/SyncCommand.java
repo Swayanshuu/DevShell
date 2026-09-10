@@ -20,7 +20,7 @@ public class SyncCommand implements Runnable {
 
     @Override
     public void run() {
-        if (!authService.ensureAuthenticated(syncService)) {
+        if (!authService.ensureAuthenticated(syncService, false)) {
             return;
         }
         syncService.syncAll(false);
