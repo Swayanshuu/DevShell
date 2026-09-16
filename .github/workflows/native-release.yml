@@ -55,10 +55,12 @@ jobs:
           mkdir -p dist/
           cp ${{ matrix.binary_src }} dist/${{ matrix.target }}
           cd dist/
-          if [ "${{ runner.os }}" = "Windows" ]; process; then
-            certutil -hashfile ${{ matrix.target }} SHA256 > ${{ matrix.target }}.sha256
-          else
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum ${{ matrix.target }} > ${{ matrix.target }}.sha256
+          elif command -v shasum >/dev/null 2>&1; then
             shasum -a 256 ${{ matrix.target }} > ${{ matrix.target }}.sha256
+          else
+            powershell -Command "(Get-FileHash -Algorithm SHA256 ${{ matrix.target }}).Hash" > ${{ matrix.target }}.sha256
           fi
 
       - name: Upload Binary Artifact
