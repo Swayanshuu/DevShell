@@ -1,6 +1,6 @@
 {
   "name": "devshell",
-  "version": "1.0.15",
+  "version": "1.0.17",
   "description": "DevShell - Personal Developer Command Center & Terminal Analytics by Swynx",
   "main": "bin/devshell.js",
   "bin": {
@@ -13,7 +13,7 @@
   "files": [
     "bin/",
     "lib/",
-    "target/devshell-1.0.15.jar",
+    "target/*.jar",
     "README.md",
     "COMMANDS.md",
     "package.json"
