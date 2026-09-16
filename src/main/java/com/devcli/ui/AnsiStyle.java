@@ -66,6 +66,7 @@ public class AnsiStyle {
     public static String boldMagenta(String text) { return apply(BOLD + BRIGHT_MAGENTA, text); }
     public static String boldYellow(String text) { return apply(BOLD + BRIGHT_YELLOW, text); }
     public static String boldRed(String text) { return apply(BOLD + BRIGHT_RED, text); }
+    public static String boldBlue(String text) { return apply(BOLD + BRIGHT_BLUE, text); }
     public static String boldWhite(String text) { return apply(BOLD + BRIGHT_WHITE, text); }
     public static String brightWhite(String text) { return apply(BRIGHT_WHITE, text); }
 

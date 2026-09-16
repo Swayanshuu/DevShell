@@ -70,7 +70,7 @@ public class UpdateCheckerService {
             return pkg.getImplementationVersion().trim();
         }
 
-        return "1.0.0";
+        return "1.0.15";
     }
 
     public void checkAndNotify() {

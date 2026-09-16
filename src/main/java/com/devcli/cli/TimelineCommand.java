@@ -40,36 +40,37 @@ public class TimelineCommand implements Runnable {
         List<Commit> commits = storageService.getCommits();
         List<Repository> repos = storageService.getRepositories();
 
-        BoxRenderer.printBanner("DEVELOPER TIMELINE 🗓️", "Activity milestones over recent weeks");
+        System.out.println();
+        List<String> timeLines = new java.util.ArrayList<>();
 
         if (commits.isEmpty()) {
-            System.out.println("  " + AnsiStyle.dim("No commit activity cached. Run `devcli sync` to update timeline data."));
-            return;
-        }
+            timeLines.add("  " + AnsiStyle.dim("No commit activity cached. Run `devshell sync` to update timeline data."));
+        } else {
+            Map<LocalDate, List<Commit>> grouped = commits.stream()
+                    .filter(c -> c.getDate() != null)
+                    .collect(Collectors.groupingBy(c -> c.getDate().toLocalDate()));
 
-        Map<LocalDate, List<Commit>> grouped = commits.stream()
-                .filter(c -> c.getDate() != null)
-                .collect(Collectors.groupingBy(c -> c.getDate().toLocalDate()));
+            LocalDate current = LocalDate.now();
 
-        LocalDate current = LocalDate.now();
+            for (int i = 0; i < 7; i++) {
+                LocalDate date = current.minusDays(i);
+                String dateLabel = date.format(DateTimeFormatter.ofPattern("EEE, MMM dd"));
+                List<Commit> dayCommits = grouped.get(date);
 
-        for (int i = 0; i < 7; i++) {
-            LocalDate date = current.minusDays(i);
-            String dateLabel = date.format(DateTimeFormatter.ofPattern("EEE, MMM dd"));
-            List<Commit> dayCommits = grouped.get(date);
-
-            if (dayCommits != null && !dayCommits.isEmpty()) {
-                String dots = "● ".repeat(Math.min(dayCommits.size(), 8));
-                System.out.println("  " + AnsiStyle.boldCyan(String.format("%-14s", dateLabel)) + " ┃ " + AnsiStyle.boldGreen(dots) + AnsiStyle.dim("(" + dayCommits.size() + " commits)"));
-                for (Commit c : dayCommits) {
-                    System.out.println("                 ┃   " + AnsiStyle.cyan(c.getRepoName()) + " → " + AnsiStyle.boldWhite(c.getShortMessage()));
+                if (dayCommits != null && !dayCommits.isEmpty()) {
+                    timeLines.add(String.format("  %s %s   %s",
+                            AnsiStyle.boldCyan(String.format("%-14s", dateLabel)),
+                            AnsiStyle.boldGreen(String.format("%-12s", dayCommits.size() + " commits")),
+                            AnsiStyle.boldWhite(dayCommits.get(0).getRepoName() + " → " + dayCommits.get(0).getShortMessage())));
+                } else {
+                    timeLines.add(String.format("  %s %s",
+                            AnsiStyle.dim(String.format("%-14s", dateLabel)),
+                            AnsiStyle.dim("0 commits recorded")));
                 }
-            } else {
-                System.out.println("  " + AnsiStyle.dim(String.format("%-14s", dateLabel)) + " ┃ " + AnsiStyle.dim("○ (no commits recorded)"));
             }
-            System.out.println("                 ┃");
         }
-        System.out.println("  " + AnsiStyle.dim("               ▲"));
-        System.out.println("  " + AnsiStyle.dim("       Start of timeline window\n"));
+
+        BoxRenderer.renderBox("DEVELOPER ACTIVITY TIMELINE STREAM", timeLines, AnsiStyle.CYAN);
+        System.out.println();
     }
 }

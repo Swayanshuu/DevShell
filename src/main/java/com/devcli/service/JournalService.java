@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,20 +14,20 @@ import java.util.UUID;
 public class JournalService {
 
     private final LocalStorageService storageService;
+    private final LearningService learningService;
 
     @Autowired
-    public JournalService(LocalStorageService storageService) {
+    public JournalService(LocalStorageService storageService, LearningService learningService) {
         this.storageService = storageService;
+        this.learningService = learningService;
     }
 
     public List<Learning> getLearnings() {
-        return storageService.getLearnings();
+        return learningService.getAllLearnings();
     }
 
     public void addLearning(String title, String category, String description) {
-        List<Learning> list = storageService.getLearnings();
-        list.add(0, new Learning(UUID.randomUUID().toString(), title, category != null ? category : "General", description != null ? description : "", LocalDateTime.now()));
-        storageService.saveLearnings(list);
+        learningService.addLearning(title, description, null, "General", category);
     }
 
     public List<Bug> getBugs() {

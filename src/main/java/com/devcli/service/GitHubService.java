@@ -35,7 +35,9 @@ public class GitHubService {
     }
 
     public UserProfile fetchUserProfile(String token) throws Exception {
-        if (isDemoToken(token)) return getDemoUserProfile();
+        if (token == null || token.trim().isEmpty()) {
+            throw new IllegalStateException("Authentication required. Run devshell login to authenticate.");
+        }
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.github.com/user"))
@@ -68,7 +70,7 @@ public class GitHubService {
     }
 
     public List<Repository> fetchRepositories(String token, String username) throws Exception {
-        if (isDemoToken(token)) return getDemoRepositories(username);
+        if (token == null || token.trim().isEmpty()) return new ArrayList<>();
 
         String url = "https://api.github.com/user/repos?sort=updated&per_page=50&affiliation=owner,collaborator";
         HttpRequest request = HttpRequest.newBuilder()
@@ -321,139 +323,5 @@ public class GitHubService {
         } catch (Exception e) {
             return LocalDateTime.now();
         }
-    }
-
-    // Demo / Sample Data Providers
-    public UserProfile getDemoUserProfile() {
-        UserProfile p = new UserProfile("swayak", "Swayak", "Building awesome developer tools & cloud platforms 🚀",
-                "https://github.com/swayak.png", 18, 5, 142, 68, LocalDateTime.now(), "DEMO", "demo_token_123");
-        p.setGithubId(84920412L);
-        return p;
-    }
-
-    public List<Repository> getDemoRepositories(String username) {
-        List<Repository> repos = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-
-        Repository r1 = new Repository();
-        r1.setName("LinkPeer");
-        r1.setFullName(username + "/LinkPeer");
-        r1.setOwner(username);
-        r1.setDescription("Real-time collaborative developer workspace & chat");
-        r1.setLanguage("TypeScript");
-        r1.setStars(42);
-        r1.setForks(12);
-        r1.setPrivate(false);
-        r1.setUpdatedAt(now.minusHours(2));
-        r1.setStatus(Repository.Status.ACTIVE);
-        r1.setCommitCount(312);
-        Map<String, Long> l1 = new HashMap<>(); l1.put("TypeScript", 65000L); l1.put("CSS", 20000L); l1.put("HTML", 8000L);
-        r1.setLanguages(l1);
-        repos.add(r1);
-
-        Repository r2 = new Repository();
-        r2.setName("linkpeer-backend");
-        r2.setFullName(username + "/linkpeer-backend");
-        r2.setOwner(username);
-        r2.setDescription("Spring Boot microservice cluster & WebSocket hub for LinkPeer");
-        r2.setLanguage("Java");
-        r2.setStars(28);
-        r2.setForks(5);
-        r2.setPrivate(true);
-        r2.setUpdatedAt(now.minusHours(5));
-        r2.setStatus(Repository.Status.ACTIVE);
-        r2.setCommitCount(245);
-        Map<String, Long> l2 = new HashMap<>(); l2.put("Java", 85000L); l2.put("Docker", 5000L);
-        r2.setLanguages(l2);
-        repos.add(r2);
-
-        Repository r3 = new Repository();
-        r3.setName("DevCLI");
-        r3.setFullName(username + "/DevCLI");
-        r3.setOwner(username);
-        r3.setDescription("Personal Developer Command Center CLI application in Spring Boot");
-        r3.setLanguage("Java");
-        r3.setStars(15);
-        r3.setForks(2);
-        r3.setPrivate(false);
-        r3.setUpdatedAt(now.minusMinutes(20));
-        r3.setStatus(Repository.Status.ACTIVE);
-        r3.setCommitCount(84);
-        Map<String, Long> l3 = new HashMap<>(); l3.put("Java", 45000L);
-        r3.setLanguages(l3);
-        repos.add(r3);
-
-        Repository r4 = new Repository();
-        r4.setName("igit_connects");
-        r4.setFullName(username + "/igit_connects");
-        r4.setOwner(username);
-        r4.setDescription("Campus connectivity & event sharing platform");
-        r4.setLanguage("Kotlin");
-        r4.setStars(19);
-        r4.setForks(4);
-        r4.setPrivate(false);
-        r4.setUpdatedAt(now.minusDays(18));
-        r4.setStatus(Repository.Status.RECENTLY_ACTIVE);
-        r4.setCommitCount(110);
-        Map<String, Long> l4 = new HashMap<>(); l4.put("Kotlin", 55000L);
-        r4.setLanguages(l4);
-        repos.add(r4);
-
-        Repository r5 = new Repository();
-        r5.setName("Leetcode-Solutions");
-        r5.setFullName(username + "/Leetcode-Solutions");
-        r5.setOwner(username);
-        r5.setDescription("Daily algorithm challenges and problem solutions");
-        r5.setLanguage("Java");
-        r5.setStars(8);
-        r5.setForks(1);
-        r5.setPrivate(false);
-        r5.setUpdatedAt(now.minusDays(85));
-        r5.setStatus(Repository.Status.INACTIVE);
-        r5.setCommitCount(91);
-        repos.add(r5);
-
-        return repos;
-    }
-
-    public List<Commit> getDemoCommits(String username, List<Repository> repos) {
-        List<Commit> commits = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-
-        commits.add(new Commit("a7b9c1d", "DevCLI", "feat: implement comments API and terminal box rendering", username, username + "@gmail.com", now.minusHours(2), "https://github.com/commits/a7b9c1d"));
-        commits.add(new Commit("f4e3d2c", "DevCLI", "fix: Firebase authentication token refreshing", username, username + "@gmail.com", now.minusHours(4), "https://github.com/commits/f4e3d2c"));
-        commits.add(new Commit("b1c2d3e", "linkpeer-backend", "refactor: optimize WebSocket event dispatching pool", username, username + "@gmail.com", now.minusHours(6), "https://github.com/commits/b1c2d3e"));
-        commits.add(new Commit("c9d8e7f", "LinkPeer", "style: polish dark mode glassmorphism theme components", username, username + "@gmail.com", now.minusDays(1).withHour(14).withMinute(30), "https://github.com/commits/c9d8e7f"));
-        commits.add(new Commit("d8e7f6a", "LinkPeer", "docs: update API endpoints documentation", username, username + "@gmail.com", now.minusDays(1).withHour(11).withMinute(15), "https://github.com/commits/d8e7f6a"));
-        commits.add(new Commit("e7f6a5b", "devcli", "initial commit: bootstrap Spring Boot CLI framework", username, username + "@gmail.com", now.minusDays(2).withHour(16).withMinute(45), "https://github.com/commits/e7f6a5b"));
-
-        return commits;
-    }
-
-    public List<PullRequest> getDemoPullRequests(String username) {
-        List<PullRequest> prs = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-        prs.add(new PullRequest(101, "LinkPeer", 42, "feat: Add comments & reactions API", "OPEN", now.minusDays(1), null, "https://github.com/pull/42", username));
-        prs.add(new PullRequest(102, "linkpeer-backend", 18, "fix: Resolve database connection leak under high load", "MERGED", now.minusDays(3), now.minusDays(2), "https://github.com/pull/18", username));
-        prs.add(new PullRequest(103, "DevCLI", 5, "feat: Interactive CLI onboarding & progress spinner", "MERGED", now.minusDays(5), now.minusDays(4), "https://github.com/pull/5", username));
-        return prs;
-    }
-
-    public List<Issue> getDemoIssues(String username) {
-        List<Issue> issues = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-        issues.add(new Issue(201, "linkpeer-backend", 29, "Intermittent WebSocket reconnect failures on iOS", "OPEN", now.minusDays(2), null, "https://github.com/issues/29", username));
-        issues.add(new Issue(202, "LinkPeer", 14, "Add dark theme support for code editor widget", "CLOSED", now.minusDays(6), now.minusDays(3), "https://github.com/issues/14", username));
-        return issues;
-    }
-
-    public List<ActivityEvent> getDemoEvents(String username) {
-        List<ActivityEvent> events = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
-        events.add(new ActivityEvent("e1", "PushEvent", "DevCLI", "Pushed 3 commits to feature/comments branch", now.minusHours(2)));
-        events.add(new ActivityEvent("e2", "PullRequestEvent", "LinkPeer", "Opened PR #42: Add comments & reactions API", now.minusDays(1)));
-        events.add(new ActivityEvent("e3", "PushEvent", "linkpeer-backend", "Pushed 2 commits to main", now.minusDays(2)));
-        events.add(new ActivityEvent("e4", "CreateEvent", "DevCLI", "Created branch feature/comments", now.minusDays(3)));
-        return events;
     }
 }

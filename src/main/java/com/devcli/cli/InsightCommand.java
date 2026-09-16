@@ -44,19 +44,20 @@ public class InsightCommand implements Runnable {
 
         List<Insight> insights = insightEngine.generateInsights(repos, commits, prs, languages);
 
-        BoxRenderer.printBanner("DEVCLI INSIGHTS 💡", "Derived observations from your real development history");
+        System.out.println();
+        List<String> inLines = new java.util.ArrayList<>();
 
-        if (insights.isEmpty()) {
-            System.out.println("  " + AnsiStyle.dim("No insights available. Sync more activity data with `devcli sync`."));
-            return;
+        if (insights == null || insights.isEmpty()) {
+            inLines.add("  " + AnsiStyle.yellow("Not enough data to generate observations."));
+        } else {
+            for (Insight ins : insights) {
+                inLines.add("  " + AnsiStyle.boldWhite(String.format("%-25s", ins.getTitle())) + " " + AnsiStyle.cyan(ins.getMetric()));
+                inLines.add("    " + AnsiStyle.gray(ins.getDetail()));
+                inLines.add("");
+            }
         }
 
-        for (Insight ins : insights) {
-            String categoryBadge = AnsiStyle.boldMagenta("[" + ins.getCategory() + "]");
-            System.out.println("  " + categoryBadge + "  " + AnsiStyle.boldWhite(ins.getTitle()));
-            System.out.println("  " + AnsiStyle.gray(ins.getDetail()));
-            System.out.println("  " + AnsiStyle.cyan("Metric Evidence: ") + AnsiStyle.brightCyan(ins.getMetric()));
-            System.out.println();
-        }
+        BoxRenderer.renderBox("DEVELOPMENT INSIGHTS & OBSERVATIONS", inLines, AnsiStyle.CYAN);
+        System.out.println();
     }
 }

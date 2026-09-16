@@ -31,6 +31,9 @@ public class Repository {
     private LocalDateTime lastCommitAt;
     private Status status;
     private int commitCount;
+    private int openIssuesCount;
+    private String license;
+    private String healthState;
     private Map<String, Long> languages = new HashMap<>();
 
     public Repository() {}
@@ -76,6 +79,15 @@ public class Repository {
 
     public int getCommitCount() { return commitCount; }
     public void setCommitCount(int commitCount) { this.commitCount = commitCount; }
+
+    public int getOpenIssuesCount() { return openIssuesCount; }
+    public void setOpenIssuesCount(int openIssuesCount) { this.openIssuesCount = openIssuesCount; }
+
+    public String getLicense() { return license != null ? license : "None"; }
+    public void setLicense(String license) { this.license = license; }
+
+    public String getHealthState() { return healthState != null ? healthState : "MAINTAINED"; }
+    public void setHealthState(String healthState) { this.healthState = healthState; }
 
     public Map<String, Long> getLanguages() { return languages; }
     public void setLanguages(Map<String, Long> languages) { this.languages = languages; }

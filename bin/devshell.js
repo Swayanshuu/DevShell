@@ -3,6 +3,9 @@
 const { spawnSync, execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
+const pkg = require("../package.json");
+const { resolveJavaRuntime } = require("../lib/launcher/runtime-manager");
+const { runDiagnostics } = require("../lib/launcher/doctor");
 
 // Ensure Windows Console uses UTF-8 Code Page 65001
 if (process.platform === "win32") {
@@ -11,69 +14,73 @@ if (process.platform === "win32") {
   } catch (e) {}
 }
 
-const jarPath = path.join(__dirname, "..", "target", "devshell-1.0.14.jar");
+const jarVersion = pkg.version || "1.0.15";
+const jarPath = path.join(__dirname, "..", "target", `devshell-${jarVersion}.jar`);
+const fallbackJarPath = path.join(__dirname, "..", "target", "devshell-1.0.15.jar");
+const actualJarPath = fs.existsSync(jarPath) ? jarPath : fallbackJarPath;
 const projectDir = path.join(__dirname, "..");
 
-// Check if Java runtime is available
-try {
-  execSync("java -version", { stdio: "ignore" });
-} catch (e) {
-  console.error(
-    "\x1b[31m%s\x1b[0m",
-    "✗ Error: Java 17+ JRE/JDK is required to run DevShell.",
-  );
-  console.error(
-    "Please install Java 17+ or Temurin JDK and ensure `java` is in your PATH.",
-  );
-  process.exit(1);
-}
-
-// Auto-build Spring Boot package if JAR file is missing
-if (!fs.existsSync(jarPath)) {
-  console.log(
-    "\x1b[36m%s\x1b[0m",
-    "📦 Packaging DevShell Spring Boot application...",
-  );
+(async () => {
+  let runtime;
   try {
-    execSync("mvn package -DskipTests", { cwd: projectDir, stdio: "inherit" });
-  } catch (e) {
-    console.error(
-      "\x1b[31m%s\x1b[0m",
-      "✗ Build failed. Make sure Apache Maven (`mvn`) is installed.",
-    );
+    runtime = await resolveJavaRuntime();
+  } catch (err) {
     process.exit(1);
   }
-}
 
-// Execute Spring Boot JAR passing all command line arguments with explicit UTF-8 JVM flags
-const args = [
-  "-Dfile.encoding=UTF-8",
-  "-Dsun.stdout.encoding=UTF-8",
-  "-Dsun.stderr.encoding=UTF-8",
-  "-jar",
-  jarPath,
-  ...process.argv.slice(2),
-];
+  // Handle `devshell doctor` diagnostic command
+  const cliArgs = process.argv.slice(2);
+  if (cliArgs.length > 0 && cliArgs[0] === "doctor") {
+    runDiagnostics(runtime);
+    process.exit(0);
+  }
 
-const env = Object.assign({}, process.env);
-delete env.JAVA_TOOL_OPTIONS; // Prevent JVM "Picked up JAVA_TOOL_OPTIONS" notice
+  // Auto-build Spring Boot package if JAR file is missing during development
+  if (!fs.existsSync(actualJarPath)) {
+    console.log(
+      "\x1b[36m%s\x1b[0m",
+      "📦 Packaging DevShell Spring Boot application...",
+    );
+    try {
+      execSync("mvn package -DskipTests", { cwd: projectDir, stdio: "inherit" });
+    } catch (e) {
+      console.error(
+        "\x1b[31m%s\x1b[0m",
+        "✗ Build failed. Make sure Apache Maven (`mvn`) is installed.",
+      );
+      process.exit(1);
+    }
+  }
 
-const result = spawnSync("java", args, {
-  stdio: "inherit",
-  env: env,
-  shell: true,
-});
+  // Execute Spring Boot JAR passing all command line arguments with explicit UTF-8 JVM flags
+  const args = [
+    "-Dfile.encoding=UTF-8",
+    "-Dsun.stdout.encoding=UTF-8",
+    "-Dsun.stderr.encoding=UTF-8",
+    "-jar",
+    actualJarPath,
+    ...cliArgs,
+  ];
 
-checkNpmUpdate();
+  const env = Object.assign({}, process.env);
+  delete env.JAVA_TOOL_OPTIONS; // Prevent JVM "Picked up JAVA_TOOL_OPTIONS" notice
 
-process.exit(result.status !== null ? result.status : 0);
+  const result = spawnSync(runtime.execPath, args, {
+    stdio: "inherit",
+    env: env,
+    shell: false,
+  });
+
+  checkNpmUpdate();
+
+  process.exit(result.status !== null ? result.status : 0);
+})();
 
 function checkNpmUpdate() {
   try {
     const https = require("https");
     const os = require("os");
-    const pkg = require("../package.json");
-    const currentVersion = pkg.version || "1.0.9";
+    const currentVersion = pkg.version || "1.0.15";
     const cacheDir = path.join(os.homedir(), ".devshell");
     const cacheFile = path.join(cacheDir, "update.json");
 

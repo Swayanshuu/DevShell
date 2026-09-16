@@ -49,17 +49,15 @@ public class AchievementsCommand implements Runnable {
 
         long unlockedCount = achievements.stream().filter(Achievement::isUnlocked).count();
 
-        BoxRenderer.printBanner("DEVELOPER ACHIEVEMENTS", unlockedCount + " / " + achievements.size() + " Badges Unlocked");
-
+        List<String> achLines = new java.util.ArrayList<>();
         for (Achievement ach : achievements) {
-            String icon = ach.getIcon();
-            String title = ach.isUnlocked() ? AnsiStyle.boldGreen(ach.getTitle()) : AnsiStyle.dim(ach.getTitle());
-            String statusTag = ach.isUnlocked() ? AnsiStyle.boldGreen("✓ UNLOCKED") : AnsiStyle.dim("🔒 LOCKED");
+            String title = ach.isUnlocked() ? AnsiStyle.boldGreen(String.format("%-22s", ach.getTitle())) : AnsiStyle.dim(String.format("%-22s", ach.getTitle()));
+            String statusTag = ach.isUnlocked() ? AnsiStyle.boldGreen("UNLOCKED") : AnsiStyle.dim("LOCKED");
 
-            System.out.println("  " + icon + "  " + title + "  " + statusTag);
-            System.out.println("     " + AnsiStyle.gray(ach.getDescription()));
-            System.out.println("     " + AnsiStyle.dim("Progress: " + ach.getProgressText()));
-            System.out.println();
+            achLines.add(String.format("  %s   %s   %s", title, statusTag, AnsiStyle.gray(ach.getProgressText())));
         }
+
+        BoxRenderer.renderBox("DEVELOPER ACHIEVEMENTS (" + unlockedCount + " / " + achievements.size() + " UNLOCKED)", achLines, AnsiStyle.YELLOW);
+        System.out.println();
     }
 }

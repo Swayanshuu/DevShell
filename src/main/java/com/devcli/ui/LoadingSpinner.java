@@ -61,6 +61,15 @@ public class LoadingSpinner implements AutoCloseable {
         System.out.flush();
     }
 
+    public void stopClear() {
+        running = false;
+        if (thread != null) {
+            try { thread.join(200); } catch (InterruptedException ignored) {}
+        }
+        System.out.print("\r\u001B[K");
+        System.out.flush();
+    }
+
     @Override
     public void close() {
         if (running) {

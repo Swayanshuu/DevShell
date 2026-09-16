@@ -11,6 +11,9 @@ public class Commit {
     private LocalDateTime date;
     private String url;
 
+    private int additions;
+    private int deletions;
+
     public Commit() {}
 
     public Commit(String sha, String repoName, String message, String author, String authorEmail, LocalDateTime date, String url) {
@@ -22,6 +25,12 @@ public class Commit {
         this.date = date;
         this.url = url;
     }
+
+    public int getAdditions() { return additions; }
+    public void setAdditions(int additions) { this.additions = additions; }
+
+    public int getDeletions() { return deletions; }
+    public void setDeletions(int deletions) { this.deletions = deletions; }
 
     public String getSha() { return sha; }
     public void setSha(String sha) { this.sha = sha; }

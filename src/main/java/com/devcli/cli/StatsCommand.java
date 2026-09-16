@@ -63,36 +63,42 @@ public class StatsCommand implements Runnable {
         System.out.println("  Network    : " + AnsiStyle.gray(user.getFollowers() + " followers • " + user.getFollowing() + " following"));
         System.out.println("  Repos      : " + AnsiStyle.green(repos.size() + " total accessible repos (" + user.getPublicRepos() + " public)"));
 
-        // 2. Language Stack Distribution
-        BoxRenderer.printSectionHeader("💻 STACK & LANGUAGES");
         Map<String, Double> languages = analysisEngine.calculateLanguagePercentages(repos);
+        List<String> langLines = new java.util.ArrayList<>();
         languages.forEach((lang, pct) -> {
-            String progressBar = ProgressRenderer.buildProgressBar(pct, 25);
-            System.out.printf("  %-14s %s\n", AnsiStyle.boldCyan(lang), progressBar);
+            String progressBar = ProgressRenderer.buildProgressBar(pct, 20);
+            langLines.add(String.format("  %s %s   %s", AnsiStyle.boldCyan(String.format("%-14s", lang)), progressBar, AnsiStyle.boldYellow(String.format("%3.0f%%", pct))));
         });
+        if (langLines.isEmpty()) {
+            langLines.add("  " + AnsiStyle.gray("No language stack data detected"));
+        }
+        BoxRenderer.renderBox("DEVELOPER STACK DISTRIBUTION", langLines, AnsiStyle.CYAN);
+        System.out.println();
 
         // 3. Contribution Metrics
-        BoxRenderer.printSectionHeader("📊 CONTRIBUTION METRICS");
         int totalCommits = repos.stream().mapToInt(Repository::getCommitCount).sum();
         if (totalCommits == 0) totalCommits = commits.size();
 
-        List<String> headers = List.of("Metric", "Value", "Interpretation");
-        List<List<String>> rows = new ArrayList<>();
-        rows.add(List.of("Total Commits", AnsiStyle.boldGreen(String.valueOf(totalCommits)), "High commit volume & steady velocity"));
-        rows.add(List.of("Active Projects", AnsiStyle.boldCyan(String.valueOf(repos.stream().filter(r -> r.getStatus() == Repository.Status.ACTIVE).count())), "Multi-project active focus"));
-        rows.add(List.of("Pull Requests", AnsiStyle.boldYellow(String.valueOf(prs.size())), "Frequent code reviews and contributions"));
-        rows.add(List.of("Commit Streak", AnsiStyle.boldMagenta(analysisEngine.calculateStreak(commits) + " days"), "Consistent daily development habit"));
+        List<String> metricLines = new java.util.ArrayList<>();
+        metricLines.add(String.format("  %s %s   %s", AnsiStyle.dim(String.format("%-20s", "Total Commits")), AnsiStyle.boldGreen(String.format("%-8s", String.valueOf(totalCommits))), AnsiStyle.gray("High commit volume")));
+        metricLines.add(String.format("  %s %s   %s", AnsiStyle.dim(String.format("%-20s", "Active Projects")), AnsiStyle.boldCyan(String.format("%-8s", String.valueOf(repos.stream().filter(r -> r.getStatus() == Repository.Status.ACTIVE).count()))), AnsiStyle.gray("Multi-project focus")));
+        metricLines.add(String.format("  %s %s   %s", AnsiStyle.dim(String.format("%-20s", "Pull Requests")), AnsiStyle.boldYellow(String.format("%-8s", String.valueOf(prs.size()))), AnsiStyle.gray("Active review flow")));
+        metricLines.add(String.format("  %s %s   %s", AnsiStyle.dim(String.format("%-20s", "Commit Streak")), AnsiStyle.boldMagenta(String.format("%-8s", analysisEngine.calculateStreak(commits) + "d")), AnsiStyle.gray("Daily contribution habit")));
 
-        TableRenderer.printTable(headers, rows);
+        BoxRenderer.renderBox("CONTRIBUTION METRICS", metricLines, AnsiStyle.GREEN);
+        System.out.println();
 
         // 4. Developer Observations
-        BoxRenderer.printSectionHeader("🧠 DEVELOPER OBSERVATIONS");
         List<Insight> insights = insightEngine.generateInsights(repos, commits, prs, languages);
+        List<String> obsLines = new java.util.ArrayList<>();
         for (Insight ins : insights) {
-            System.out.println("  " + AnsiStyle.boldMagenta("▸ " + ins.getTitle()));
-            System.out.println("    " + AnsiStyle.gray(ins.getDetail()));
-            System.out.println("    " + AnsiStyle.dim("Metric: " + ins.getMetric()));
-            System.out.println();
+            obsLines.add("  " + AnsiStyle.boldMagenta(String.format("%-25s", ins.getTitle())) + AnsiStyle.cyan(ins.getMetric()));
+            obsLines.add("    " + AnsiStyle.gray(ins.getDetail()));
         }
+        if (obsLines.isEmpty()) {
+            obsLines.add("  " + AnsiStyle.gray("Collecting data for observations"));
+        }
+        BoxRenderer.renderBox("DEVELOPER OBSERVATIONS", obsLines, AnsiStyle.YELLOW);
+        System.out.println();
     }
 }

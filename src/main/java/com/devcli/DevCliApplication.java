@@ -42,9 +42,19 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
         System.setProperty("spring.main.banner-mode", "off");
 
         java.util.List<String> springArgs = new java.util.ArrayList<>();
-        for (String arg : args) {
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
             if ("--debug".equalsIgnoreCase(arg)) {
                 System.setProperty("devshell.debug", "true");
+            } else if ("--no-color".equalsIgnoreCase(arg)) {
+                com.devcli.ui.AnsiStyle.setColorEnabled(false);
+                springArgs.add(arg);
+            } else if ("--theme".equalsIgnoreCase(arg) && i + 1 < args.length) {
+                String next = args[i + 1].toLowerCase();
+                if ("white".equals(next) || "light".equals(next)) {
+                    com.devcli.ui.AnsiStyle.setColorEnabled(false);
+                }
+                springArgs.add(arg);
             } else {
                 springArgs.add(arg);
             }
@@ -75,8 +85,10 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
             }
         }
 
+        com.devcli.ui.LoadingSpinner spinner = null;
         java.util.concurrent.CompletableFuture<Void> syncFuture = null;
         if (shouldAutoSync) {
+            spinner = com.devcli.ui.LoadingSpinner.start("Syncing developer workspace...");
             syncFuture = syncService.triggerAutoSync();
         }
 
@@ -100,13 +112,17 @@ public class DevCliApplication implements CommandLineRunner, ExitCodeGenerator {
             return 1;
         });
 
-        exitCode = cmdLine.execute(args);
-
         if (syncFuture != null) {
             try {
-                syncFuture.get(5, java.util.concurrent.TimeUnit.SECONDS);
+                syncFuture.get(2, java.util.concurrent.TimeUnit.SECONDS);
             } catch (Exception ignored) {}
         }
+
+        if (spinner != null) {
+            spinner.stopClear();
+        }
+
+        exitCode = cmdLine.execute(args);
 
         updateCheckerService.checkAndNotify();
     }

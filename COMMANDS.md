@@ -1,109 +1,141 @@
 # DevShell Command Reference
 
-> Comprehensive documentation for all **DevShell** subcommands, flags, and usage options.
+> Comprehensive documentation for all **DevShell** Personal Developer OS subcommands, flags, and options.
 
 ---
 
 ## Table of Contents
 
-- [Primary Commands](#primary-commands)
+- [Primary OS Commands](#primary-os-commands)
   - [`devshell status`](#devshell-status)
-  - [`devshell login`](#devshell-login)
-  - [`devshell logout`](#devshell-logout)
-- [Analytics & Developer DNA](#analytics--developer-dna)
-  - [`devshell stats`](#devshell-stats)
+  - [`devshell dna` / `devshell profile`](#devshell-dna--devshell-profile)
+  - [`devshell trends`](#devshell-trends)
+  - [`devshell diff`](#devshell-diff)
+  - [`devshell calendar`](#devshell-calendar)
+- [Project Health & Analytics](#project-health--analytics)
   - [`devshell projects`](#devshell-projects)
   - [`devshell project <name>`](#devshell-project-name)
-  - [`devshell activity`](#devshell-activity)
-  - [`devshell insight`](#devshell-insight)
-- [Milestones & Achievements](#milestones--achievements)
+  - [`devshell radar`](#devshell-radar)
+  - [`devshell focus`](#devshell-focus)
+  - [`devshell snapshot`](#devshell-snapshot)
+  - [`devshell graph`](#devshell-graph)
+- [Goals, XP & Milestones](#goals-xp--milestones)
+  - [`devshell goals` / `devshell goal add`](#devshell-goals--devshell-goal-add)
+  - [`devshell xp`](#devshell-xp)
   - [`devshell achievements`](#devshell-achievements)
-  - [`devshell timeline`](#devshell-timeline)
-- [Developer Journal & Export](#developer-journal--export)
+  - [`devshell history`](#devshell-history)
+- [Open Source, Portfolio & Wrapped](#open-source-portfolio--wrapped)
+  - [`devshell opensource`](#devshell-opensource)
+  - [`devshell wrapped`](#devshell-wrapped)
+  - [`devshell portfolio`](#devshell-portfolio)
+  - [`devshell report`](#devshell-report)
+- [Developer Knowledge Base & Utilities](#developer-knowledge-base--utilities)
   - [`devshell learn`](#devshell-learn)
   - [`devshell bugs`](#devshell-bugs)
-  - [`devshell export`](#devshell-export)
-- [System Utilities & Flags](#system-utilities--flags)
+  - [`devshell prompt`](#devshell-prompt)
   - [`devshell sync`](#devshell-sync)
-  - [`devshell --help`](#devshell---help)
-  - [`devshell --debug`](#devshell---debug)
+- [Global Scripting Flags](#global-scripting-flags)
+  - [`--json`](#--json)
+  - [`--no-color`](#--no-color)
+  - [`--quiet`](#--quiet)
 
 ---
 
-## Primary Commands
+## Primary OS Commands
 
 ### `devshell status`
 
-Displays the primary command center dashboard snapshot. Executed by default when running `devshell` without subcommands.
+Displays the primary daily developer snapshot. Executed by default when running `devshell`.
 
-**Output Data**:
-- Authenticated user handle & profile status
-- Daily contribution streak counter
-- Commits pushed today
-- Active project focus and recent activity log
-- System observation summary
-
-**Usage**:
 ```bash
-devshell status
+DEV SHELL
+────────────────────────────────────────
+
+TODAY
+
+  Commits              7
+  Lines changed        +842 / -231
+  Active repositories  3
+  Pull requests        2
+  Reviews              1
+
+STREAK
+
+  Current              12 days
+  Longest              27 days
+
+TOP STACK
+
+  Java                 42%
+  Dart                 28%
+  SQL                  14%
+
+RECENT PROJECTS
+
+  LinkPeer             2h ago
+  DevShell             5h ago
+  BatchMate            1d ago
 ```
 
 ---
 
-### `devshell login`
+### `devshell dna` / `devshell profile`
 
-Authenticates DevShell with your GitHub account. Prompts an interactive terminal menu with options:
-1. Browser OAuth authorization (`repo`, `read:user`, `user:email` scopes)
-2. Personal Access Token (PAT) manual entry
-3. Demo guest profile
+Generates categorized developer identity analytics:
+- Stack breakdown (Backend %, Mobile %, Database %, Frontend %, Other %)
+- Primary Domain identification
+- Peak productivity time window (`12 PM - 5 PM`, `8 PM - 12 AM`)
+- Streak history, public repositories, and pull requests.
 
-Credentials are cached locally at `~/.devshell/credentials.json`.
-
-**Usage**:
 ```bash
-devshell login
+devshell dna
+devshell profile
 ```
 
 ---
 
-### `devshell logout`
+### `devshell trends`
 
-Revokes local authorization tokens and clears cached telemetry from `~/.devshell/`.
+Tracks historical development trends over 30d, 90d, or 365d windows with period-over-period percentage comparisons.
 
-**Usage**:
 ```bash
-devshell logout
+devshell trends --30d
+devshell trends --90d
+devshell trends --365d
 ```
 
 ---
 
-## Analytics & Developer DNA
+### `devshell diff`
 
-### `devshell stats`
+Compares current and previous activity periods for commits, PR activity, active projects, and learnings.
 
-Generates your Developer DNA Report.
-
-**Output Data**:
-- User profile summary (Name, Handle, GitHub User ID, Bio, Followers)
-- Tech stack & language percentage distribution progress bars
-- Contribution table (Total commits, active repos, PR reviews, streak evaluation)
-
-**Usage**:
 ```bash
-devshell stats
+devshell diff
 ```
 
 ---
+
+### `devshell calendar`
+
+Renders a terminal ANSI contribution heatmap grid (`░ ▒ ▓ █`) with color legend.
+
+```bash
+devshell calendar
+```
+
+---
+
+## Project Health & Analytics
 
 ### `devshell projects`
 
-Displays your GitHub repository universe categorized by status:
-- **Active**: Commits within the last 14 days
-- **Recently Active**: Commits within the last 30 days
-- **Inactive**: No commits in over 30 days
-- **Archived**: Repository is archived
+Lists your repository universe categorized by activity state:
+- **`ACTIVE`**: Commits within last 14 days
+- **`MAINTAINED`**: Commits within last 60 days
+- **`LOW ACTIVITY`**: Commits within last 180 days
+- **`DORMANT`**: No commits in over 180 days
 
-**Usage**:
 ```bash
 devshell projects
 ```
@@ -112,169 +144,229 @@ devshell projects
 
 ### `devshell project <name>`
 
-Inspects telemetry for a specific repository.
+Displays detailed project health dashboard (Commits, Contributors, Open Issues, PRs, Last Activity, Activity state, Maintenance status, Languages).
 
-**Usage**:
 ```bash
+devshell project DevShell
 devshell project LinkPeer
-devshell project LeetCode-Solutions
 ```
 
 ---
 
-### `devshell activity`
+### `devshell radar`
 
-Streams your chronological GitHub contribution feed.
+Attention tracker highlighting inactive repositories, open issues, pending PRs, and streaks.
 
-**Flags**:
-- `--today`: Filter activity for today only
-- `--week`: Filter activity for the current week
-- `--project <name>`: Filter activity for a specific project
-
-**Usage**:
 ```bash
-devshell activity
-devshell activity --today
-devshell activity --week
-devshell activity --project LinkPeer
+devshell radar
 ```
 
 ---
 
-### `devshell insight`
+### `devshell focus`
 
-Generates data-driven observations regarding coding habits, language specialization, and repository review velocity.
+Provides data-driven daily focus recommendations based on your active repositories, issues, and learnings.
 
-**Usage**:
 ```bash
-devshell insight
+devshell focus
 ```
 
 ---
 
-## Milestones & Achievements
+### `devshell snapshot`
+
+Evaluates developer activity snapshot with explicit reasoning for Consistency, Project Activity, Open Source, Documentation, Maintenance, and Learning.
+
+```bash
+devshell snapshot
+```
+
+---
+
+### `devshell graph`
+
+Renders an ASCII relationship tree (Project -> Stack -> Learnings -> Activity).
+
+```bash
+devshell graph
+```
+
+---
+
+## Goals, XP & Milestones
+
+### `devshell goals` / `devshell goal add`
+
+Creates and tracks personal developer goals with visual progress bars (`[██████████████░░] 82%`).
+
+```bash
+# View goals:
+devshell goals
+
+# Add a goal:
+devshell goal add "Solve 100 LeetCode problems"
+```
+
+---
+
+### `devshell xp`
+
+Displays developer level, XP progression bar, weekly gained XP, and breakdown (+100 Open source contribution, +50 PR merged, +30 Repo maintained, +20 Learning, +10 Daily activity).
+
+```bash
+devshell xp
+```
+
+---
 
 ### `devshell achievements`
 
-Displays unlocked milestone badges and contribution trackers.
+Displays unlocked developer milestone badges.
 
-**Milestone Badges**:
-- **Commit Machine**: Push 100+ total commits
-- **Ship It**: Maintain active repositories
-- **Octopus**: Multi-language stack specialization
-- **Builder**: Maintain 10+ projects
-- **Consistent**: Maintain a 14+ day commit streak
-- **Learner**: Record 5+ developer journal entries
-- **Bug Hunter**: Resolve local bugs
-
-**Usage**:
 ```bash
 devshell achievements
 ```
 
 ---
 
-### `devshell timeline`
+### `devshell history`
 
-Renders a visual commit frequency graph across recent weeks.
+Renders a monthly development timeline history.
 
-**Usage**:
 ```bash
-devshell timeline
+devshell history
+devshell history --year 2026
 ```
 
 ---
 
-## Developer Journal & Export
+## Open Source, Portfolio & Wrapped
+
+### `devshell opensource`
+
+Tracks your open-source journey, public repos, external contributions, PRs, issues, reviews, and merged PRs.
+
+```bash
+devshell opensource
+```
+
+---
+
+### `devshell wrapped`
+
+Generates a yearly development recap presentation. Use `--export html` to generate a standalone HTML report.
+
+```bash
+devshell wrapped
+devshell wrapped --export html
+```
+
+---
+
+### `devshell portfolio`
+
+Generates an interactive developer portfolio. Use `--export html` to export a standalone HTML webpage.
+
+```bash
+devshell portfolio
+devshell portfolio --export html
+```
+
+---
+
+### `devshell report`
+
+Generates multi-format development reports.
+
+```bash
+devshell report weekly --format terminal
+devshell report monthly --format markdown
+devshell report yearly --format json
+```
+
+---
+
+## Developer Knowledge Base & Utilities
 
 ### `devshell learn`
 
-Log or view technical discoveries and architectural notes.
+Terminal-first Personal Developer Knowledge Base to record, edit, pin, and search technical learnings.
 
-**Usage**:
 ```bash
-# View all logged learnings:
+# List all recorded learnings (pinned & recent):
 devshell learn
 
-# Record a new discovery:
-devshell learn "Spring Boot WebClient timeout bounds configuration"
+# Direct shortcut to record a note:
+devshell learn "Spring Security filter chain order"
+
+# Add a learning with full metadata:
+devshell learn add "Implemented JWT token refresh flow" --title "JWT Refresh Flow" --tags "spring,security" --project "LinkPeer" --category "Backend"
+
+# View full learning details:
+devshell learn view LEARN-001
+
+# Edit an existing learning (interactive or via flags):
+devshell learn edit LEARN-001 --title "Updated Title" --tags "spring,security,auth"
+
+# Pin or unpin important notes:
+devshell learn pin LEARN-001
+devshell learn unpin LEARN-001
+
+# Search learnings by text query, tag, or project:
+devshell learn search "spring"
+devshell learn search --tag security
+devshell learn search --project LinkPeer
+
+# Delete a learning entry:
+devshell learn delete LEARN-001 --yes
+
+# Export Knowledge Base as JSON:
+devshell learn --json
 ```
 
 ---
 
 ### `devshell bugs`
 
-Local issue tracker for logging and resolving bugs prior to pushing code.
+Local issue tracker for pre-commit bug tracking.
 
-**Flags**:
-- `--add "<description>"`: Log a new bug
-- `--resolve <bug-id>`: Mark a bug as resolved
-
-**Usage**:
 ```bash
-# View open bugs:
 devshell bugs
-
-# Log a bug:
-devshell bugs --add "NullPointer in WebSocket reconnect handler"
-
-# Resolve a bug:
+devshell bugs --add "Fix NPE in WebSocket reconnect"
 devshell bugs --resolve BUG-101
 ```
 
 ---
 
-### `devshell export`
+### `devshell prompt`
 
-Exports a comprehensive Developer DNA report to a file.
+Generates shell prompt integration snippets for `zsh`, `bash`, and `fish`.
 
-**Flags**:
-- `-f, --format <format>`: `markdown` (default), `json`, or `html`
-- `-o, --output <file>`: Target file path (default: `devcli-report.md`)
-
-**Usage**:
 ```bash
-# Export as Markdown:
-devshell export
-
-# Export as JSON:
-devshell export --format json
-
-# Export as HTML:
-devshell export --format html --output report.html
+devshell prompt
 ```
 
 ---
 
-## System Utilities & Flags
-
 ### `devshell sync`
 
-Forces an immediate data synchronization with the GitHub API.
+Triggers an immediate synchronization with the GitHub REST API.
 
-**Usage**:
 ```bash
 devshell sync
 ```
 
 ---
 
-### `devshell --help`
+## Global Scripting Flags
 
-Displays CLI options and interactive help screen.
+Every major command supports global output options for scripting and CI pipelines:
 
-**Usage**:
+- `--json`: Emits pure machine-readable JSON without ANSI escape codes.
+- `--no-color`: Disables terminal ANSI color formatting.
+- `--quiet`: Suppresses non-essential console logs.
+
 ```bash
-devshell --help
-```
-
----
-
-### `devshell --debug`
-
-Enables verbose technical stack traces and debug output.
-
-**Usage**:
-```bash
-devshell status --debug
+devshell status --json
+devshell trends --no-color
 ```

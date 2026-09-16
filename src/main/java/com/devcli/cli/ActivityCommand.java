@@ -49,8 +49,6 @@ public class ActivityCommand implements Runnable {
         List<Commit> commits = storageService.getCommits();
         List<ActivityEvent> events = storageService.getEvents();
 
-        BoxRenderer.printBanner("DEVELOPMENT ACTIVITY FEED", "Recent GitHub events and commit log stream");
-
         LocalDate now = LocalDate.now();
 
         // Filter commits
@@ -69,23 +67,30 @@ public class ActivityCommand implements Runnable {
                 })
                 .collect(Collectors.toList());
 
+        System.out.println();
+        List<String> actLines = new java.util.ArrayList<>();
+
         if (filteredCommits.isEmpty()) {
-            System.out.println("  " + AnsiStyle.yellow("No recent commit activity matching specified filters."));
-            System.out.println();
-            return;
+            actLines.add("  " + AnsiStyle.yellow("No recent commit activity matching specified filters."));
+        } else {
+            actLines.add("  " + AnsiStyle.dim(String.format("%-12s %-18s %-10s %s", "TIME", "REPO", "SHA", "MESSAGE")));
+            actLines.add("  " + AnsiStyle.dim("────────────────────────────────────────────────────────────"));
+
+            for (Commit c : filteredCommits) {
+                String timeStr = c.getDate() != null ? c.getDate().format(DateTimeFormatter.ofPattern("MM-dd HH:mm")) : "--:--";
+                String repoStr = c.getRepoName() != null ? c.getRepoName() : "repo";
+                String shaStr = "[" + c.getShortSha() + "]";
+                String msgStr = c.getShortMessage();
+
+                actLines.add(String.format("  %s %s %s %s",
+                        AnsiStyle.dim(String.format("%-12s", timeStr)),
+                        AnsiStyle.boldCyan(String.format("%-18s", repoStr)),
+                        AnsiStyle.boldYellow(String.format("%-10s", shaStr)),
+                        AnsiStyle.boldWhite(msgStr)));
+            }
         }
 
-        System.out.println("  " + AnsiStyle.boldCyan("TIME      REPO                SHA      MESSAGE"));
-        System.out.println("  " + AnsiStyle.dim("──────────────────────────────────────────────────────────────────"));
-
-        for (Commit c : filteredCommits) {
-            String timeStr = c.getDate() != null ? c.getDate().format(DateTimeFormatter.ofPattern("MM-dd HH:mm")) : "--:--";
-            String repoStr = String.format("%-18s", c.getRepoName());
-            String shaStr = AnsiStyle.yellow("[" + c.getShortSha() + "]");
-            String msgStr = AnsiStyle.boldWhite(c.getShortMessage());
-
-            System.out.println("  " + AnsiStyle.dim(timeStr) + "  " + AnsiStyle.cyan(repoStr) + "  " + shaStr + "  " + msgStr);
-        }
+        BoxRenderer.renderBox("DEVELOPMENT ACTIVITY FEED (" + filteredCommits.size() + ")", actLines, AnsiStyle.CYAN);
         System.out.println();
     }
 }

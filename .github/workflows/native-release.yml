@@ -1,0 +1,99 @@
+name: DevShell Native Executables Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-native:
+    name: Build Native Binary (${{ matrix.os }} - ${{ matrix.arch }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            arch: x64
+            target: devshell-windows-x64.exe
+            binary_src: target/devshell.exe
+          - os: macos-latest
+            arch: arm64
+            target: devshell-macos-arm64
+            binary_src: target/devshell
+          - os: macos-13
+            arch: x64
+            target: devshell-macos-x64
+            binary_src: target/devshell
+          - os: ubuntu-latest
+            arch: x64
+            target: devshell-linux-x64
+            binary_src: target/devshell
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup GraalVM Java 21
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: 'maven'
+
+      - name: Build Native Binary with Maven
+        run: mvn -Pnative native:compile -DskipTests
+
+      - name: Prepare Binary Artifact
+        shell: bash
+        run: |
+          mkdir -p dist/
+          cp ${{ matrix.binary_src }} dist/${{ matrix.target }}
+          cd dist/
+          if [ "${{ runner.os }}" = "Windows" ]; process; then
+            certutil -hashfile ${{ matrix.target }} SHA256 > ${{ matrix.target }}.sha256
+          else
+            shasum -a 256 ${{ matrix.target }} > ${{ matrix.target }}.sha256
+          fi
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: dist/*
+
+  create-release:
+    name: Create GitHub Release
+    needs: build-native
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets/
+
+      - name: Organize Release Binaries and Generate SHA256SUMS
+        run: |
+          mkdir -p final-assets/
+          find release-assets/ -type f -not -name "*.sha256" -exec cp {} final-assets/ \;
+          cd final-assets/
+          sha256sum * > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: final-assets/*
+          name: DevShell Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true

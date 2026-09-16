@@ -1,7 +1,7 @@
 {
   "name": "devshell",
-  "version": "1.0.14",
-  "description": "DevShell - Personal Developer Command Center CLI application by Swynx",
+  "version": "1.0.15",
+  "description": "DevShell - Personal Developer Command Center & Terminal Analytics by Swynx",
   "main": "bin/devshell.js",
   "bin": {
     "devshell": "bin/devshell.js",
@@ -11,14 +11,16 @@
     "access": "public"
   },
   "files": [
-    "bin",
-    "target/devshell-1.0.14.jar",
+    "bin/",
+    "lib/",
+    "target/devshell-1.0.15.jar",
     "README.md",
     "COMMANDS.md",
     "package.json"
   ],
   "scripts": {
     "build": "mvn clean package -DskipTests",
+    "test": "node test/launcher.test.js",
     "start": "node bin/devshell.js"
   },
   "keywords": [

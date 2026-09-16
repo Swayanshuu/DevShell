@@ -53,7 +53,7 @@ public class BugsCommand implements Runnable {
         if (resolveTitle != null && !resolveTitle.trim().isEmpty()) {
             boolean success = journalService.resolveBug(resolveTitle.trim());
             if (success) {
-                System.out.println(AnsiStyle.boldGreen("\n✓ Resolved bug: ") + AnsiStyle.brightWhite(resolveTitle.trim()) + " 🐛✨");
+                System.out.println(AnsiStyle.boldGreen("\n✓ Resolved bug: ") + AnsiStyle.brightWhite(resolveTitle.trim()));
             } else {
                 System.out.println(AnsiStyle.brightRed("\n✗ Could not find open bug matching: ") + resolveTitle);
             }
@@ -62,25 +62,24 @@ public class BugsCommand implements Runnable {
         }
 
         List<Bug> bugs = journalService.getBugs();
-        BoxRenderer.printBanner("DEVELOPER BUG TRACKER 🐛", bugs.size() + " bugs tracked");
+        System.out.println();
+        List<String> bugLines = new java.util.ArrayList<>();
 
         if (bugs.isEmpty()) {
-            System.out.println("  " + AnsiStyle.dim("No active bugs tracked. Log one with `devcli bugs --add \"Bug title\"`"));
-            System.out.println();
-            return;
-        }
+            bugLines.add("  " + AnsiStyle.gray("No active bugs tracked. Log one with `devshell bugs --add \"Bug title\"`"));
+        } else {
+            for (Bug b : bugs) {
+                String statusBadge = "RESOLVED".equalsIgnoreCase(b.getStatus()) ? AnsiStyle.boldGreen(String.format("%-10s", "RESOLVED")) : AnsiStyle.boldYellow(String.format("%-10s", b.getStatus()));
+                String dateStr = b.getCreatedAt() != null ? b.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "Recently";
 
-        for (Bug b : bugs) {
-            String statusBadge = "RESOLVED".equalsIgnoreCase(b.getStatus()) ? AnsiStyle.boldGreen("✓ RESOLVED") : AnsiStyle.boldYellow("● " + b.getStatus());
-            String dateStr = b.getCreatedAt() != null ? b.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "Recently";
-
-            System.out.println("  " + statusBadge + "  " + AnsiStyle.boldWhite(b.getTitle()));
-            System.out.println("     " + AnsiStyle.dim("Project: " + b.getProject() + " • Severity: " + b.getSeverity() + " • Logged: " + dateStr));
-            if (b.getNotes() != null && !b.getNotes().isEmpty()) {
-                System.out.println("     " + AnsiStyle.gray(b.getNotes()));
+                bugLines.add(String.format("  %s %s   %s",
+                        statusBadge,
+                        AnsiStyle.boldWhite(String.format("%-22s", b.getTitle())),
+                        AnsiStyle.dim(b.getProject() + " • " + b.getSeverity() + " • " + dateStr)));
             }
-            System.out.println();
         }
-        System.out.println("  " + AnsiStyle.dim("Commands: `devcli bugs --add \"<title>\"` | `devcli bugs --resolve \"<title>\"`\n"));
+
+        BoxRenderer.renderBox("DEVELOPER BUG TRACKER (" + bugs.size() + ")", bugLines, AnsiStyle.RED);
+        System.out.println("  " + AnsiStyle.dim("Commands: `devshell bugs --add \"<title>\"` | `devshell bugs --resolve \"<title>\"`\n"));
     }
 }

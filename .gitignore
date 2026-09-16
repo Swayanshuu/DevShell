@@ -18,3 +18,8 @@ test-report.pdf
 .settings/
 .DS_Store
 Thumbs.db
+
+# Scratch & local native dist
+dist-exe/
+scratch/
+

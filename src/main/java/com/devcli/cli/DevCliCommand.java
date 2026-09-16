@@ -13,9 +13,25 @@ import java.util.concurrent.Callable;
 @Command(
         name = "devshell",
         aliases = {"devcli"},
-        description = "DevShell - Personal Developer Command Center",
+        description = "DevShell - Personal Developer Operating System & Terminal Analytics",
         subcommands = {
                 StatusCommand.class,
+                DnaCommand.class,
+                TrendsCommand.class,
+                DiffCommand.class,
+                CalendarCommand.class,
+                GoalCommand.class,
+                XpCommand.class,
+                RadarCommand.class,
+                FocusCommand.class,
+                SnapshotCommand.class,
+                HistoryCommand.class,
+                GraphCommand.class,
+                OpenSourceCommand.class,
+                WrappedCommand.class,
+                PortfolioCommand.class,
+                ReportCommand.class,
+                PromptCommand.class,
                 LoginCommand.class,
                 LogoutCommand.class,
                 StatsCommand.class,
@@ -43,7 +59,19 @@ public class DevCliCommand implements Callable<Integer> {
         }
     }
 
-    @Option(names = {"--debug"}, description = "Enable detailed technical debug output and trace logs", scope = CommandLine.ScopeType.INHERIT)
+    @Option(names = {"--json"}, description = "Emit pure machine-readable JSON output")
+    private boolean json;
+
+    @Option(names = {"--no-color"}, description = "Disable ANSI color formatting")
+    private boolean noColor;
+
+    @Option(names = {"--theme"}, description = "Color theme (devshell | white)")
+    private String theme;
+
+    @Option(names = {"--quiet"}, description = "Suppress non-essential console logs")
+    private boolean quiet;
+
+    @Option(names = {"--debug"}, description = "Enable detailed technical debug output and trace logs")
     private boolean debug;
 
     private final WelcomeCommand welcomeCommand;

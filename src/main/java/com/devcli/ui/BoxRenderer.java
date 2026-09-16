@@ -18,6 +18,7 @@ public class BoxRenderer {
 
     public static void printAsciiBanner() {
         String swynxLink = AnsiStyle.hyperlink("SWYNX", "https://swynx.dev");
+        String version = com.devcli.service.UpdateCheckerService.getCurrentVersion();
         System.out.println(AnsiStyle.boldCyan("╭─────────────────────────────────────────────────────────────╮"));
         System.out.println(AnsiStyle.boldCyan("│                                                             │"));
         System.out.println(AnsiStyle.boldCyan("│   ██████╗ ███████╗██╗   ██╗███████╗██╗  ██╗███████╗██╗      │"));
@@ -27,7 +28,7 @@ public class BoxRenderer {
         System.out.println(AnsiStyle.boldCyan("│   ██████╔╝███████╗ ╚████╔╝ ███████║██║  ██║███████╗███████╗ │"));
         System.out.println(AnsiStyle.boldCyan("│   ╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝ │"));
         System.out.println(AnsiStyle.boldCyan("│                                                             │"));
-        System.out.println(AnsiStyle.boldCyan("│") + AnsiStyle.gray("   Your Personal Developer Command Center • ") + AnsiStyle.boldCyan(swynxLink) + AnsiStyle.gray(" • ") + AnsiStyle.boldYellow("v" + com.devcli.service.UpdateCheckerService.getCurrentVersion()) + AnsiStyle.gray("   ") + AnsiStyle.boldCyan("│"));
+        System.out.println(AnsiStyle.boldCyan("│") + AnsiStyle.gray("   Personal Developer Command Center • ") + AnsiStyle.boldCyan(swynxLink) + AnsiStyle.gray(" • ") + AnsiStyle.boldYellow("v" + String.format("%-7s", version)) + AnsiStyle.gray("  ") + AnsiStyle.boldCyan("│"));
         System.out.println(AnsiStyle.boldCyan("│                                                             │"));
         System.out.println(AnsiStyle.boldCyan("╰─────────────────────────────────────────────────────────────╯"));
         System.out.println();
@@ -69,17 +70,19 @@ public class BoxRenderer {
         for (String line : lines) {
             maxLineLen = Math.max(maxLineLen, visibleLength(line));
         }
-        int innerWidth = Math.max(maxLineLen + 4, 45);
+        int innerWidth = Math.max(maxLineLen + 2, 54);
 
         String color = borderColor != null ? borderColor : AnsiStyle.CYAN;
 
         System.out.println(color + "╭" + "─".repeat(innerWidth) + "╮" + AnsiStyle.RESET);
         if (title != null && !title.isEmpty()) {
-            System.out.println(color + "│ " + AnsiStyle.RESET + AnsiStyle.bold(title) + " ".repeat(innerWidth - visibleLength(title) - 1) + color + "│" + AnsiStyle.RESET);
+            int titlePad = innerWidth - visibleLength(title) - 1;
+            titlePad = Math.max(0, titlePad);
+            System.out.println(color + "│ " + AnsiStyle.RESET + AnsiStyle.bold(title) + " ".repeat(titlePad) + color + "│" + AnsiStyle.RESET);
             System.out.println(color + "├" + "─".repeat(innerWidth) + "┤" + AnsiStyle.RESET);
         }
         for (String line : lines) {
-            int padding = innerWidth - visibleLength(line) - 2;
+            int padding = innerWidth - visibleLength(line) - 1;
             padding = Math.max(0, padding);
             System.out.println(color + "│ " + AnsiStyle.RESET + line + " ".repeat(padding) + color + "│" + AnsiStyle.RESET);
         }

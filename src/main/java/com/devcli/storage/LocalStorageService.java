@@ -137,6 +137,33 @@ public class LocalStorageService {
         return list != null ? list : new ArrayList<>();
     }
 
+    public void saveGoals(List<Goal> goals) {
+        saveToFile("goals.json", goals);
+    }
+
+    public List<Goal> getGoals() {
+        List<Goal> list = readListFromFile("goals.json", new TypeReference<List<Goal>>() {});
+        return list != null ? list : new ArrayList<>();
+    }
+
+    public void saveXpEvents(List<XPEvent> events) {
+        saveToFile("xp.json", events);
+    }
+
+    public List<XPEvent> getXpEvents() {
+        List<XPEvent> list = readListFromFile("xp.json", new TypeReference<List<XPEvent>>() {});
+        return list != null ? list : new ArrayList<>();
+    }
+
+    public void saveSnapshots(List<HistoricalSnapshot> snapshots) {
+        saveToFile("snapshots.json", snapshots);
+    }
+
+    public List<HistoricalSnapshot> getSnapshots() {
+        List<HistoricalSnapshot> list = readListFromFile("snapshots.json", new TypeReference<List<HistoricalSnapshot>>() {});
+        return list != null ? list : new ArrayList<>();
+    }
+
     private <T> void saveToFile(String filename, T object) {
         try {
             ensureBaseDir();
