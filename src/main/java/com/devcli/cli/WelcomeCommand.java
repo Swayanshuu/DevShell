@@ -79,6 +79,28 @@ public class WelcomeCommand implements Runnable {
 
             BoxRenderer.renderBox("DevShell Launchpad (v" + currentVer + ")", loggedOutLines, AnsiStyle.YELLOW);
             System.out.println();
+
+            System.out.print(AnsiStyle.boldCyan("  Select option [1-3, or Press ENTER to exit] > "));
+            try {
+                Scanner scanner = new Scanner(System.in);
+                if (scanner.hasNextLine()) {
+                    String input = scanner.nextLine().trim().toLowerCase();
+                    System.out.println();
+                    if ("1".equals(input) || "login".equals(input)) {
+                        System.out.println("  " + AnsiStyle.boldYellow("To login, run: ") + AnsiStyle.boldCyan("devshell login <your-github-token>"));
+                        System.out.println(AnsiStyle.dim("\n  Press ENTER to exit..."));
+                        scanner.nextLine();
+                    } else if ("2".equals(input) || "help".equals(input)) {
+                        helpCommand.run();
+                        System.out.println(AnsiStyle.dim("\n  Press ENTER to exit..."));
+                        scanner.nextLine();
+                    } else if ("3".equals(input) || "status".equals(input)) {
+                        statusCommand.run();
+                        System.out.println(AnsiStyle.dim("\n  Press ENTER to exit..."));
+                        scanner.nextLine();
+                    }
+                }
+            } catch (Exception ignored) {}
             return;
         }
 
