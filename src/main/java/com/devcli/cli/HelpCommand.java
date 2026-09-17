@@ -68,6 +68,7 @@ public class HelpCommand implements Runnable {
         // 5. Exporters & Showcase
         System.out.println("  " + AnsiStyle.boldBlue("🎁 5. EXPORT & SHOWCASE"));
         System.out.println("  " + AnsiStyle.dim("──────────────────────────────────────────────────────────────────"));
+        printCmd("wrap", "Generate 1080x1920 developer WRAP poster image (--week|--month|--year)");
         printCmd("wrapped", "Generate annual/monthly developer wrapped recap summary");
         printCmd("portfolio", "Generate dynamic, responsive HTML developer portfolio site");
         printCmd("report", "Generate detailed executive PDF/HTML status report");

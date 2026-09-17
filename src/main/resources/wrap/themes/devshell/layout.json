@@ -1,0 +1,112 @@
+{
+  "width": 1080,
+  "height": 1920,
+
+  "header": {
+    "title": "SOFTWARE ENGINEER",
+    "wrap": "WRAP",
+    "tagline": "Code, Commits, and Repos",
+    "centerX": 540,
+    "y": 150
+  },
+
+  "profile": {
+    "polaroid": {
+      "x": 90,
+      "y": 1210,
+      "width": 380,
+      "height": 455,
+      "rotationDeg": -3
+    }
+  },
+
+  "stats": {
+    "linesChanged": {
+      "x": 130,
+      "y": 440,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "LINES OF CODE",
+      "icon": "</>"
+    },
+    "commits": {
+      "x": 580,
+      "y": 440,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "COMMITS",
+      "icon": "☍"
+    },
+    "additions": {
+      "x": 130,
+      "y": 630,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "ADDITIONS",
+      "icon": "☕"
+    },
+    "deletions": {
+      "x": 580,
+      "y": 630,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "DELETIONS",
+      "icon": "⏱"
+    },
+    "activeDays": {
+      "x": 130,
+      "y": 820,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "ACTIVE DAYS",
+      "icon": "📅"
+    },
+    "longestStreak": {
+      "x": 580,
+      "y": 820,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "LONGEST STREAK",
+      "icon": "🔥"
+    },
+    "projects": {
+      "x": 130,
+      "y": 1010,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "PROJECTS SHIPPED",
+      "icon": "🚀"
+    },
+    "codingHours": {
+      "x": 580,
+      "y": 1010,
+      "maxWidth": 400,
+      "maxFontSize": 78,
+      "minFontSize": 36,
+      "label": "HOURS CODED",
+      "icon": "⚡"
+    }
+  },
+
+  "highlights": {
+    "topLanguage": {
+      "x": 530,
+      "y": 1210,
+      "maxWidth": 460,
+      "label": "TOP 3 LANGUAGES"
+    },
+    "topRepository": {
+      "x": 530,
+      "y": 1455,
+      "maxWidth": 460,
+      "label": "TOP 3 PROJECTS"
+    }
+  }
+}

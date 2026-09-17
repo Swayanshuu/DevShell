@@ -5,11 +5,13 @@ public class LoadingSpinner implements AutoCloseable {
     private static final String[] SPINNER_FRAMES = {"⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"};
     
     private final String taskName;
+    private volatile String currentTaskName;
     private volatile boolean running = true;
     private Thread thread;
 
     public LoadingSpinner(String taskName) {
         this.taskName = taskName;
+        this.currentTaskName = taskName;
     }
 
     public static LoadingSpinner start(String taskName) {
@@ -18,13 +20,19 @@ public class LoadingSpinner implements AutoCloseable {
         return spinner;
     }
 
+    public void updateMessage(String newMessage) {
+        if (newMessage != null) {
+            this.currentTaskName = newMessage;
+        }
+    }
+
     private void runAsync() {
         thread = new Thread(() -> {
             int frameIdx = 0;
-            String paddedTask = String.format("%-34s", taskName);
             while (running) {
                 String frame = SPINNER_FRAMES[frameIdx % SPINNER_FRAMES.length];
-                System.out.print("\r  " + paddedTask + " " + AnsiStyle.boldCyan(frame));
+                String displayTask = currentTaskName;
+                System.out.print("\r\u001B[K  " + displayTask + " " + AnsiStyle.boldCyan(frame));
                 System.out.flush();
                 frameIdx++;
                 try {
