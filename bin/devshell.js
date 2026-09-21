@@ -14,9 +14,19 @@ if (process.platform === "win32") {
   } catch (e) {}
 }
 
-const jarVersion = pkg.version || "1.0.15";
-const jarPath = path.join(__dirname, "..", "target", `devshell-${jarVersion}.jar`);
-const fallbackJarPath = path.join(__dirname, "..", "target", "devshell-1.0.15.jar");
+const jarVersion = pkg.version || "1.3.1";
+const jarPath = path.join(
+  __dirname,
+  "..",
+  "target",
+  `devshell-${jarVersion}.jar`,
+);
+const fallbackJarPath = path.join(
+  __dirname,
+  "..",
+  "target",
+  "devshell-1.3.1.jar",
+);
 const actualJarPath = fs.existsSync(jarPath) ? jarPath : fallbackJarPath;
 const projectDir = path.join(__dirname, "..");
 
@@ -42,7 +52,10 @@ const projectDir = path.join(__dirname, "..");
       "📦 Packaging DevShell Spring Boot application...",
     );
     try {
-      execSync("mvn package -DskipTests", { cwd: projectDir, stdio: "inherit" });
+      execSync("mvn package -DskipTests", {
+        cwd: projectDir,
+        stdio: "inherit",
+      });
     } catch (e) {
       console.error(
         "\x1b[31m%s\x1b[0m",
@@ -80,7 +93,7 @@ function checkNpmUpdate() {
   try {
     const https = require("https");
     const os = require("os");
-    const currentVersion = pkg.version || "1.0.15";
+    const currentVersion = pkg.version || "1.3.0";
     const cacheDir = path.join(os.homedir(), ".devshell");
     const cacheFile = path.join(cacheDir, "update.json");
 
@@ -138,8 +151,12 @@ function checkNpmUpdate() {
 
 function isNewer(current, latest) {
   if (!current || !latest) return false;
-  const cParts = current.split(".").map((n) => parseInt(n.replace(/[^0-9]/g, "")) || 0);
-  const lParts = latest.split(".").map((n) => parseInt(n.replace(/[^0-9]/g, "")) || 0);
+  const cParts = current
+    .split(".")
+    .map((n) => parseInt(n.replace(/[^0-9]/g, "")) || 0);
+  const lParts = latest
+    .split(".")
+    .map((n) => parseInt(n.replace(/[^0-9]/g, "")) || 0);
   const len = Math.max(cParts.length, lParts.length);
   for (let i = 0; i < len; i++) {
     const c = cParts[i] || 0;
